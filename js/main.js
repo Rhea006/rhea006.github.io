@@ -74,10 +74,13 @@ require([], function (){
 
         require([yiliaConfig.rootUrl + 'js/jquery.lazyload.js'], function(){
             //avatar
-            $(".js-avatar").attr("src", $(".js-avatar").attr("lazy-src"));
-            $(".js-avatar")[0].onload = function(){
-                $(".js-avatar").addClass("show");
-            }
+             // 初始化头像懒加载（使用正确的选择器和配置）
+            $(".js-avatar").lazyload({
+                srcSign: "lazy-src",    // 指定图片源属性
+                container: $(window),   // 滚动容器
+                threshold: 200,         // 提前200px加载
+                effect: "fadeIn"        // 加载动画
+            });
         });
 
       if(yiliaConfig.isHome === true) {
