@@ -6,7 +6,7 @@
   <link href="https://rhea006.github.io/atom.xml" rel="self"/>
   
   <link href="https://rhea006.github.io/"/>
-  <updated>2025-06-15T10:09:00.203Z</updated>
+  <updated>2025-06-15T11:19:26.391Z</updated>
   <id>https://rhea006.github.io/</id>
   
   <author>
@@ -21,14 +21,14 @@
     <link href="https://rhea006.github.io/2025/06/3ebf44883f8a.html"/>
     <id>https://rhea006.github.io/2025/06/3ebf44883f8a.html</id>
     <published>2025-06-15T08:18:40.079Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <updated>2025-06-15T11:19:26.391Z</updated>
     
-    <content type="html"><![CDATA[<p>sudo -i #root用户<br> ls -l &#x2F;etc&#x2F;netplan<br>![[Pasted image 20250601205045.png]]<br>sudo chmod 600 &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #修改文件权限<br>sudo nano &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #更新配置文件内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  renderer: NetworkManager</span><br><span class="line">  ethernets:</span><br><span class="line">    ens33:</span><br><span class="line">      addresses: [192.168.142.132/24]         # 设置静态IP地址和掩码</span><br><span class="line">      routes:</span><br><span class="line">        - to: default</span><br><span class="line">          via: 192.168.142.2</span><br><span class="line">      nameservers:</span><br><span class="line">        addresses: [114.114.114.114,8.8.8.8]  # 设置主、备DNS</span><br><span class="line">      dhcp4: false                            # 禁用dhcp</span><br></pre></td></tr></table></figure><p>sudo netplan apply  #应用更改</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#验证配置</span><br><span class="line">ip a show ens33</span><br><span class="line">ping -c 4 8.8.8.8   </span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#确保SSH服务正常运行</span><br><span class="line">sudo apt install openssh-server</span><br><span class="line">sudo systemctl start ssh</span><br><span class="line">sudo systemctl enable ssh</span><br></pre></td></tr></table></figure><p>![[Pasted image 20250601213334.png]]</p><h4 id="使用-SSH-密钥登录（最安全）"><a href="#使用-SSH-密钥登录（最安全）" class="headerlink" title="使用 SSH 密钥登录（最安全）"></a><strong>使用 SSH 密钥登录（最安全）</strong></h4><ol><li>在物理机生成密钥对：<br> ssh-keygen  # 默认保存到 ~&#x2F;.ssh&#x2F;id_rsa&#x3D;&#x3D;(空密码)&#x3D;&#x3D;<br> ![[Pasted image 20250601214315.png]]</li><li>将公钥复制到虚拟机：<br> scp C:\Users\Rhea.ssh\id_rsa.pub <a href="mailto:&#x72;&#x68;&#101;&#x61;&#64;&#x31;&#57;&#x32;&#46;&#x31;&#54;&#x38;&#46;&#49;&#52;&#50;&#46;&#x31;&#51;&#x32;">rhea@192.168.142.132</a>:~&#x2F;<br> ![[Pasted image 20250601214846.png]]</li><li>直接免密登录：<br> ![[Pasted image 20250601221831.png]]</li></ol>]]></content>
+    <content type="html"><![CDATA[<p>sudo -i #root用户<br> ls -l &#x2F;etc&#x2F;netplan<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601205045.png)<br>sudo chmod 600 &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #修改文件权限<br>sudo nano &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #更新配置文件内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  renderer: NetworkManager</span><br><span class="line">  ethernets:</span><br><span class="line">    ens33:</span><br><span class="line">      addresses: [192.168.142.132/24]         # 设置静态IP地址和掩码</span><br><span class="line">      routes:</span><br><span class="line">        - to: default</span><br><span class="line">          via: 192.168.142.2</span><br><span class="line">      nameservers:</span><br><span class="line">        addresses: [114.114.114.114,8.8.8.8]  # 设置主、备DNS</span><br><span class="line">      dhcp4: false                            # 禁用dhcp</span><br></pre></td></tr></table></figure><p>sudo netplan apply  #应用更改</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#验证配置</span><br><span class="line">ip a show ens33</span><br><span class="line">ping -c 4 8.8.8.8   </span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#确保SSH服务正常运行</span><br><span class="line">sudo apt install openssh-server</span><br><span class="line">sudo systemctl start ssh</span><br><span class="line">sudo systemctl enable ssh</span><br></pre></td></tr></table></figure><p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601213334.png)</p><h4 id="使用-SSH-密钥登录（最安全）"><a href="#使用-SSH-密钥登录（最安全）" class="headerlink" title="使用 SSH 密钥登录（最安全）"></a><strong>使用 SSH 密钥登录（最安全）</strong></h4><ol><li>在物理机生成密钥对：<br> ssh-keygen  # 默认保存到 ~&#x2F;.ssh&#x2F;id_rsa&#x3D;&#x3D;(空密码)&#x3D;&#x3D;<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601214315.png)）</li><li>将公钥复制到虚拟机：<br> scp C:\Users\Rhea.ssh\id_rsa.pub <a href="mailto:&#114;&#104;&#x65;&#97;&#64;&#x31;&#x39;&#x32;&#x2e;&#49;&#54;&#56;&#x2e;&#x31;&#52;&#50;&#46;&#x31;&#51;&#50;">rhea@192.168.142.132</a>:~&#x2F;<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601214846.png)）</li><li>直接免密登录：<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601221831.png)）</li></ol>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;sudo -i #root用户&lt;br&gt; ls -l &amp;#x2F;etc&amp;#x2F;netplan&lt;br&gt;![[Pasted image 20250601205045.png]]&lt;br&gt;sudo chmod 600 &amp;#x2F;etc&amp;#x2F;netplan&amp;#x2F;01</summary>
+    <summary type="html">&lt;p&gt;sudo -i #root用户&lt;br&gt; ls -l &amp;#x2F;etc&amp;#x2F;netplan&lt;br&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250601205045.png)&lt;br&gt;sudo chmod 600 </summary>
       
     
     
@@ -88,15 +88,15 @@
     <link href="https://rhea006.github.io/2025/06/dcf6e19d0c6b.html"/>
     <id>https://rhea006.github.io/2025/06/dcf6e19d0c6b.html</id>
     <published>2025-06-15T08:18:30.716Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <updated>2025-06-15T11:19:26.391Z</updated>
     
-    <content type="html"><![CDATA[<p>bp抓包<br>![[{3AD6ED26-D5D6-4348-AF13-B5279A3A9036}.png]]</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET：?FantasyLand=0xLE4KCODE</span><br><span class="line">POST：lyc0ris=goat</span><br><span class="line"></span><br><span class="line">请求头：</span><br><span class="line">Referer: https://www.tzc.edu.cn/</span><br><span class="line">User-Agent: SansBrowser</span><br><span class="line">Cookie: user=admin</span><br><span class="line">X-Forwarded-For: 127.0.0.1</span><br></pre></td></tr></table></figure><p>用hackbar也行</p>]]></content>
+    <content type="html"><![CDATA[<p>bp抓包<br><img src="/assets/images/%7B3AD6ED26-D5D6-4348-AF13-B5279A3A9036%7D.png"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET：?FantasyLand=0xLE4KCODE</span><br><span class="line">POST：lyc0ris=goat</span><br><span class="line"></span><br><span class="line">请求头：</span><br><span class="line">Referer: https://www.tzc.edu.cn/</span><br><span class="line">User-Agent: SansBrowser</span><br><span class="line">Cookie: user=admin</span><br><span class="line">X-Forwarded-For: 127.0.0.1</span><br></pre></td></tr></table></figure><p>用hackbar也行</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;bp抓包&lt;br&gt;![[{3AD6ED26-D5D6-4348-AF13-B5279A3A9036}.png]]&lt;/p&gt;
-&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span </summary>
+    <summary type="html">&lt;p&gt;bp抓包&lt;br&gt;&lt;img src=&quot;/assets/images/%7B3AD6ED26-D5D6-4348-AF13-B5279A3A9036%7D.png&quot;&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td </summary>
       
     
     
@@ -111,14 +111,14 @@
     <link href="https://rhea006.github.io/2025/06/7607b4665f24.html"/>
     <id>https://rhea006.github.io/2025/06/7607b4665f24.html</id>
     <published>2025-06-15T08:18:20.849Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>放大![[{051C5CE7-A087-4021-8A67-CA44B66376DE}.png]]<br>110011011011001100001110011111110111010111011000010101110101010110011011101011101110110111011110011111101<br>&#x3D;&#x3D;<strong>ASCII是7位</strong>&#x3D;&#x3D;</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">string = &#x27;110011011011001100001110011111110111010111011000010101110101010110011011101011101110110111011110011111101&#x27;</span><br><span class="line"> </span><br><span class="line">flag = &#x27;&#x27;</span><br><span class="line">for i in range(0, len(string), 7):</span><br><span class="line">    bin_str = string[i: i + 7]</span><br><span class="line">    flag += chr(int(bin_str, 2))</span><br><span class="line"> </span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure><p>flag{W0W*funny}</p>]]></content>
+    <content type="html"><![CDATA[<p>放大<img src="/assets/images/%7B051C5CE7-A087-4021-8A67-CA44B66376DE%7D.png"><br>110011011011001100001110011111110111010111011000010101110101010110011011101011101110110111011110011111101<br>&#x3D;&#x3D;<strong>ASCII是7位</strong>&#x3D;&#x3D;</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">string = &#x27;110011011011001100001110011111110111010111011000010101110101010110011011101011101110110111011110011111101&#x27;</span><br><span class="line"> </span><br><span class="line">flag = &#x27;&#x27;</span><br><span class="line">for i in range(0, len(string), 7):</span><br><span class="line">    bin_str = string[i: i + 7]</span><br><span class="line">    flag += chr(int(bin_str, 2))</span><br><span class="line"> </span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure><p>flag{W0W*funny}</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;放大![[{051C5CE7-A087-4021-8A67-CA44B66376DE}.png]]&lt;br&gt;110011011011001100001110011111110111010111011000010101110101010110011011101011101110</summary>
+    <summary type="html">&lt;p&gt;放大&lt;img src=&quot;/assets/images/%7B051C5CE7-A087-4021-8A67-CA44B66376DE%7D.png&quot;&gt;&lt;br&gt;1100110110110011000011100111111101110101110110000101011101</summary>
       
     
     
@@ -135,9 +135,9 @@
     <link href="https://rhea006.github.io/2025/06/ca760e6660a8.html"/>
     <id>https://rhea006.github.io/2025/06/ca760e6660a8.html</id>
     <published>2025-06-15T08:18:20.848Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">steghide extract -sf your_file.wav #从 WAV 文件中提取隐藏数据</span><br></pre></td></tr></table></figure><p>![[{BEE0A87B-FE33-46DE-B36F-EB728163008C}.png]]<br>&#x3D;&#x3D;<strong>要转换的文件放在它的文件夹下</strong>&#x3D;&#x3D;<br>![[{11E69F33-84F4-4962-A257-E294ED63D946}.png]]<br>TZCFlag{steghide_is_so_interesting}</p>]]></content>
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">steghide extract -sf your_file.wav #从 WAV 文件中提取隐藏数据</span><br></pre></td></tr></table></figure><p><img src="/assets/images/%7BBEE0A87B-FE33-46DE-B36F-EB728163008C%7D.png"><br>&#x3D;&#x3D;<strong>要转换的文件放在它的文件夹下</strong>&#x3D;&#x3D;<br><img src="/assets/images/%7B11E69F33-84F4-4962-A257-E294ED63D946%7D.png"><br>TZCFlag{steghide_is_so_interesting}</p>]]></content>
     
     
       
@@ -159,14 +159,14 @@
     <link href="https://rhea006.github.io/2025/06/442dd368d7d9.html"/>
     <id>https://rhea006.github.io/2025/06/442dd368d7d9.html</id>
     <published>2025-06-15T08:18:20.845Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>打开频谱图<br>![[{2D31FA56-C817-4AC6-A587-C9008BA90B74}.png]]</p>]]></content>
+    <content type="html"><![CDATA[<p>打开频谱图<br><img src="/assets/images/%7B2D31FA56-C817-4AC6-A587-C9008BA90B74%7D.png"></p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;打开频谱图&lt;br&gt;![[{2D31FA56-C817-4AC6-A587-C9008BA90B74}.png]]&lt;/p&gt;
+    <summary type="html">&lt;p&gt;打开频谱图&lt;br&gt;&lt;img src=&quot;/assets/images/%7B2D31FA56-C817-4AC6-A587-C9008BA90B74%7D.png&quot;&gt;&lt;/p&gt;
 </summary>
       
     
@@ -184,14 +184,14 @@
     <link href="https://rhea006.github.io/2025/06/754e741a5cac.html"/>
     <id>https://rhea006.github.io/2025/06/754e741a5cac.html</id>
     <published>2025-06-15T08:18:20.841Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>![[Pasted image 20250604133850.png]]<br>错的</p>]]></content>
+    <content type="html"><![CDATA[<p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604133850.png)<br>错的</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;![[Pasted image 20250604133850.png]]&lt;br&gt;错的&lt;/p&gt;
+    <summary type="html">&lt;p&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250604133850.png)&lt;br&gt;错的&lt;/p&gt;
 </summary>
       
     
@@ -226,14 +226,14 @@
     <link href="https://rhea006.github.io/2025/06/3c18f35ef18f.html"/>
     <id>https://rhea006.github.io/2025/06/3c18f35ef18f.html</id>
     <published>2025-06-15T08:18:20.830Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>![[flag11.png]]<br>![[{B7FFEEE2-E071-41DC-A3E3-4BDA0719A462}.png]]<br>![[Pasted image 20250604104025.png]]<br>![[Pasted image 20250604104046.png]]<br>![[Pasted image 20250604105300.png]]<br>![[{3E1FFA08-BA9D-4AA5-8A9A-6D469456C255}.png]]<br>![[{CE52806F-ECC7-47DF-8A20-7224D63472F8}.png]]<br>cumtctf{1sb_i4_s0_Ea4y}</p>]]></content>
+    <content type="html"><![CDATA[<p><img src="/assets/images/flag11.png"><br><img src="/assets/images/%7BB7FFEEE2-E071-41DC-A3E3-4BDA0719A462%7D.png"><br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604104025.png)<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604104046.png)<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604105300.png)<br><img src="/assets/images/%7B3E1FFA08-BA9D-4AA5-8A9A-6D469456C255%7D.png"><br><img src="/assets/images/%7BCE52806F-ECC7-47DF-8A20-7224D63472F8%7D.png"><br>cumtctf{1sb_i4_s0_Ea4y}</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;![[flag11.png]]&lt;br&gt;![[{B7FFEEE2-E071-41DC-A3E3-4BDA0719A462}.png]]&lt;br&gt;![[Pasted image 20250604104025.png]]&lt;br&gt;![[Pasted image 20250604104</summary>
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/flag11.png&quot;&gt;&lt;br&gt;&lt;img src=&quot;/assets/images/%7BB7FFEEE2-E071-41DC-A3E3-4BDA0719A462%7D.png&quot;&gt;&lt;br&gt;![](&amp;#x2F;assets&amp;#x</summary>
       
     
     
@@ -250,15 +250,14 @@
     <link href="https://rhea006.github.io/2025/06/a3335859427a.html"/>
     <id>https://rhea006.github.io/2025/06/a3335859427a.html</id>
     <published>2025-06-15T08:18:20.828Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>![[out.jpg]]<br>![[Pasted image 20250604103412.png]]<br>TZCFlag{copy_is_useful}<br>&#x3D;&#x3D;图片下面有字隐藏其实，用stegsolve&#x3D;&#x3D;</p>]]></content>
+    <content type="html"><![CDATA[<p><img src="/assets/images/out.jpg"><br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604103412.png)<br>TZCFlag{copy_is_useful}<br>&#x3D;&#x3D;图片下面有字隐藏其实，用stegsolve&#x3D;&#x3D;</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;![[out.jpg]]&lt;br&gt;![[Pasted image 20250604103412.png]]&lt;br&gt;TZCFlag{copy_is_useful}&lt;br&gt;&amp;#x3D;&amp;#x3D;图片下面有字隐藏其实，用stegsolve&amp;#x3D;&amp;#x3D;&lt;/p&gt;
-</summary>
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/out.jpg&quot;&gt;&lt;br&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250604103412.png)&lt;br&gt;TZCFlag{copy_is_useful}&lt;br&gt;&amp;#</summary>
       
     
     
@@ -292,14 +291,14 @@
     <link href="https://rhea006.github.io/2025/06/615c0dc5718d.html"/>
     <id>https://rhea006.github.io/2025/06/615c0dc5718d.html</id>
     <published>2025-06-15T08:18:20.822Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>![[Pasted image 20250604125245.png]]TZCFlag{the_passw0rd_is_sooo_weak}</p>]]></content>
+    <content type="html"><![CDATA[<p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604125245.png)TZCFlag{the_passw0rd_is_sooo_weak}</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;![[Pasted image 20250604125245.png]]TZCFlag{the_passw0rd_is_sooo_weak}&lt;/p&gt;
+    <summary type="html">&lt;p&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250604125245.png)TZCFlag{the_passw0rd_is_sooo_weak}&lt;/p&gt;
 </summary>
       
     
@@ -317,15 +316,15 @@
     <link href="https://rhea006.github.io/2025/06/e6857e85c451.html"/>
     <id>https://rhea006.github.io/2025/06/e6857e85c451.html</id>
     <published>2025-06-15T08:18:20.811Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>![[{57FCDD10-AE2B-4DBF-8DE9-1B19984A5445}.png]]<br>把pdf改成压缩包</p><p>![[Pasted image 20250604130730.png]]<br>![[{9FF4A261-2915-4D42-B8F4-FFA1CA8AB5E5}.png]]<br>有问题</p>]]></content>
+    <content type="html"><![CDATA[<p><img src="/assets/images/%7B57FCDD10-AE2B-4DBF-8DE9-1B19984A5445%7D.png"><br>把pdf改成压缩包</p><p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604130730.png)<br><img src="/assets/images/%7B9FF4A261-2915-4D42-B8F4-FFA1CA8AB5E5%7D.png"><br>有问题</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;![[{57FCDD10-AE2B-4DBF-8DE9-1B19984A5445}.png]]&lt;br&gt;把pdf改成压缩包&lt;/p&gt;
-&lt;p&gt;![[Pasted image 20250604130730.png]]&lt;br&gt;![[{9FF4A261-2915-4D42-B8F4-F</summary>
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/%7B57FCDD10-AE2B-4DBF-8DE9-1B19984A5445%7D.png&quot;&gt;&lt;br&gt;把pdf改成压缩包&lt;/p&gt;
+&lt;p&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted im</summary>
       
     
     
@@ -342,14 +341,14 @@
     <link href="https://rhea006.github.io/2025/06/80b026052d2d.html"/>
     <id>https://rhea006.github.io/2025/06/80b026052d2d.html</id>
     <published>2025-06-15T08:18:20.810Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <updated>2025-06-15T11:19:26.393Z</updated>
     
-    <content type="html"><![CDATA[<p>小强找到自己的压箱底学习资料，但是发现有密码，他隐约记得密码是长 <code>AQ***g0**0</code>，中间 <code>*</code> 号只记得是小写字母和数字，你能帮他找回密码吗<br>![[Pasted image 20250604130116.png]]<br>![[Pasted image 20250604130408.png]]TZCFlag{th3_password_1s_s0_so_weak}</p>]]></content>
+    <content type="html"><![CDATA[<p>小强找到自己的压箱底学习资料，但是发现有密码，他隐约记得密码是长 <code>AQ***g0**0</code>，中间 <code>*</code> 号只记得是小写字母和数字，你能帮他找回密码吗<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604130116.png)<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604130408.png)TZCFlag{th3_password_1s_s0_so_weak}</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;小强找到自己的压箱底学习资料，但是发现有密码，他隐约记得密码是长 &lt;code&gt;AQ***g0**0&lt;/code&gt;，中间 &lt;code&gt;*&lt;/code&gt; 号只记得是小写字母和数字，你能帮他找回密码吗&lt;br&gt;![[Pasted image 20250604130116.png]]</summary>
+    <summary type="html">&lt;p&gt;小强找到自己的压箱底学习资料，但是发现有密码，他隐约记得密码是长 &lt;code&gt;AQ***g0**0&lt;/code&gt;，中间 &lt;code&gt;*&lt;/code&gt; 号只记得是小写字母和数字，你能帮他找回密码吗&lt;br&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pa</summary>
       
     
     
@@ -357,33 +356,6 @@
     <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
     
     <category term="压缩包" scheme="https://rhea006.github.io/categories/MISC/%E5%8E%8B%E7%BC%A9%E5%8C%85/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/f34d247f95a9.html"/>
-    <id>https://rhea006.github.io/2025/06/f34d247f95a9.html</id>
-    <published>2025-06-15T08:17:05.529Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
-    
-    <content type="html"><![CDATA[<p>在一次RSA密钥对生成中，假设p&#x3D;473398607161，q&#x3D;4511491，e&#x3D;17<br>求解出d作为flga提交</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">p=473398607161</span><br><span class="line">q=4511491</span><br><span class="line">e=17</span><br><span class="line">z=(p-1)*(q-1) #欧拉函数</span><br><span class="line">d = pow(e, -1, z) #(e * d) % z == 1 </span><br><span class="line">#m = pow(c, d, n)</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure><p>or</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">p = 473398607161 </span><br><span class="line">q = 4511491 </span><br><span class="line">e = 17 </span><br><span class="line">z = (p - 1) * (q - 1) </span><br><span class="line">d = gmpy2.invert(e, z) # e*d mod z = 1</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure><p>![[{398FE444-FE62-474E-8333-9D51EDA83FEB}.png]]<br>右键<br>![[Pasted image 20250603090548.png]]<br>125631357777427553</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;在一次RSA密钥对生成中，假设p&amp;#x3D;473398607161，q&amp;#x3D;4511491，e&amp;#x3D;17&lt;br&gt;求解出d作为flga提交&lt;/p&gt;
-&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=</summary>
-      
-    
-    
-    
-    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
-    
-    <category term="非对称加密（Asymmetric Cryptography）" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/"/>
-    
-    <category term="RSA" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/RSA/"/>
     
     
   </entry>
@@ -401,6 +373,33 @@
       
       
     <summary type="html">&lt;p&gt;n1&amp;#x3D;905101396540408448287008786482145553515900869604295302196563108909579534883095438312732385327252896772931104517960540769359266568</summary>
+      
+    
+    
+    
+    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
+    
+    <category term="非对称加密（Asymmetric Cryptography）" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/"/>
+    
+    <category term="RSA" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/RSA/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="https://rhea006.github.io/2025/06/f34d247f95a9.html"/>
+    <id>https://rhea006.github.io/2025/06/f34d247f95a9.html</id>
+    <published>2025-06-15T08:17:05.529Z</published>
+    <updated>2025-06-15T11:19:26.357Z</updated>
+    
+    <content type="html"><![CDATA[<p>在一次RSA密钥对生成中，假设p&#x3D;473398607161，q&#x3D;4511491，e&#x3D;17<br>求解出d作为flga提交</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">p=473398607161</span><br><span class="line">q=4511491</span><br><span class="line">e=17</span><br><span class="line">z=(p-1)*(q-1) #欧拉函数</span><br><span class="line">d = pow(e, -1, z) #(e * d) % z == 1 </span><br><span class="line">#m = pow(c, d, n)</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure><p>or</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">p = 473398607161 </span><br><span class="line">q = 4511491 </span><br><span class="line">e = 17 </span><br><span class="line">z = (p - 1) * (q - 1) </span><br><span class="line">d = gmpy2.invert(e, z) # e*d mod z = 1</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure><p><img src="/assets/images/%7B398FE444-FE62-474E-8333-9D51EDA83FEB%7D.png"><br>右键<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250603090548.png)<br>125631357777427553</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;在一次RSA密钥对生成中，假设p&amp;#x3D;473398607161，q&amp;#x3D;4511491，e&amp;#x3D;17&lt;br&gt;求解出d作为flga提交&lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=</summary>
       
     
     
