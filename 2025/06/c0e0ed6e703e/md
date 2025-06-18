@@ -10,7 +10,7 @@ tags:
 
 ![](images/254E7FA0-46F1-4144-B913-C7C3E82AFEBA.png)
 
-![](images/{E5D4D6BF-5C2F-450B-BF73-B2076752FB89}.png)
+![](images/E5D4D6BF-5C2F-450B-BF73-B2076752FB89.png)
 1. 拉取模型
 
 > ollama pull deepseek-r1:8b
