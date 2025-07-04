@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>1-栈介绍 | Rhea's Blog</title><meta name="author" content="Rhea"><meta name="copyright" content="Rhea"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基本栈介绍栈是一种典型的后进先出 (Last in First Out) 的数据结构，其操作主要有压栈 (push) 与出栈 (pop) 两种操作，如下图所示（维基百科）。两种操作都操作栈顶，当然，它也有栈底。  高级语言在运行时都会被转换为汇编程序，在汇编程序运行过程中，充分利用了这一数据结构。每个程序在运行时都有虚拟地址空间，其中某一部分就是该程序对应的栈，用于保存函数调用信息和局部变量。此外">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1-栈介绍">
+<meta property="og:url" content="https://rhea006.github.io/2025/07/fa6880b0859f.html">
+<meta property="og:site_name" content="Rhea&#39;s Blog">
+<meta property="og:description" content="基本栈介绍栈是一种典型的后进先出 (Last in First Out) 的数据结构，其操作主要有压栈 (push) 与出栈 (pop) 两种操作，如下图所示（维基百科）。两种操作都操作栈顶，当然，它也有栈底。  高级语言在运行时都会被转换为汇编程序，在汇编程序运行过程中，充分利用了这一数据结构。每个程序在运行时都有虚拟地址空间，其中某一部分就是该程序对应的栈，用于保存函数调用信息和局部变量。此外">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://rhea006.github.io/img/w5.jpg">
+<meta property="article:published_time" content="2025-07-01T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-07-04T09:53:35.933Z">
+<meta property="article:author" content="Rhea">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://rhea006.github.io/img/w5.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "1-栈介绍",
+  "url": "https://rhea006.github.io/2025/07/fa6880b0859f.html",
+  "image": "https://rhea006.github.io/img/w5.jpg",
+  "datePublished": "2025-07-01T02:00:00.000Z",
+  "dateModified": "2025-07-04T09:53:35.933Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Rhea",
+      "url": "https://rhea006.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://rhea006.github.io/2025/07/fa6880b0859f.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '1-栈介绍',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Rhea's Blog" type="application/atom+xml">
+</head><body><div id="web_bg" style="background-image: url(/img/background1.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">58</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/w5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/images/logo.png" alt="Logo"><span class="site-name">Rhea's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">1-栈介绍</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">1-栈介绍</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-01T02:00:00.000Z" title="发表于 2025-07-01 10:00:00">2025-07-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-04T09:53:35.933Z" title="更新于 2025-07-04 17:53:35">2025-07-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/">PWN</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/">Learning</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/5-%E6%A0%88%E6%BA%A2%E5%87%BA%E4%B8%8EROP/">5-栈溢出与ROP</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/5-%E6%A0%88%E6%BA%A2%E5%87%BA%E4%B8%8EROP/Stack-Overflow/">Stack Overflow</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/5-%E6%A0%88%E6%BA%A2%E5%87%BA%E4%B8%8EROP/Stack-Overflow/x86x64/">x86x64</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="基本栈介绍"><a href="#基本栈介绍" class="headerlink" title="基本栈介绍"></a>基本栈介绍</h1><p>栈是一种典型的后进先出 (Last in First Out) 的数据结构，其操作主要有压栈 (push) 与出栈 (pop) 两种操作，如下图所示（维基百科）。两种操作都操作栈顶，当然，它也有栈底。</p>
+<p><img src="/../../../../../../images/image-20250701104727634.png" alt="image-20250701104727634"></p>
+<p>高级语言在运行时都会被转换为汇编程序，在汇编程序运行过程中，充分利用了这一数据结构。每个程序在运行时都有虚拟地址空间，其中某一部分就是该程序对应的栈，用于保存函数调用信息和局部变量。此外，常见的操作也是压栈与出栈。需要注意的是，<strong><code>程序的栈是从进程地址空间的高地址向低地址增长的</code></strong>。</p>
+<h1 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h1><h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a>核心组件</h2><h3 id="栈指针-SP"><a href="#栈指针-SP" class="headerlink" title="栈指针 (SP)"></a>栈指针 (SP)</h3><ul>
+<li>x86: ESP (32位), x64: RSP (64位)</li>
+<li>始终指向栈顶位置</li>
+<li><code>push/pop</code> 指令自动修改 SP</li>
+</ul>
+<h3 id="基址指针-BP"><a href="#基址指针-BP" class="headerlink" title="基址指针 (BP)"></a>基址指针 (BP)</h3><ul>
+<li>x86: EBP, x64: RBP</li>
+<li>作为当前栈帧的基准点</li>
+<li>用于定位参数和局部变量</li>
+</ul>
+<h3 id="指令指针-IP"><a href="#指令指针-IP" class="headerlink" title="指令指针 (IP)"></a>指令指针 (IP)</h3><ul>
+<li>x86: EIP, x64: RIP</li>
+<li>存储下一条执行指令地址</li>
+<li><code>call/ret</code> 指令修改 IP</li>
+</ul>
+<h2 id="函数调用过程（关键！）"><a href="#函数调用过程（关键！）" class="headerlink" title="函数调用过程（关键！）"></a>函数调用过程（关键！）</h2><h3 id="调用者-Caller-准备"><a href="#调用者-Caller-准备" class="headerlink" title="调用者 (Caller) 准备"></a>调用者 (Caller) 准备</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">; 1. 参数压栈（从右向左）</span><br><span class="line">push arg3</span><br><span class="line">push arg2</span><br><span class="line">push arg1</span><br><span class="line">; 2. 调用函数</span><br><span class="line">call function  ; 自动压入返回地址(EIP/RIP)</span><br></pre></td></tr></table></figure>
+
+<h3 id="被调函数-Callee-序言"><a href="#被调函数-Callee-序言" class="headerlink" title="被调函数 (Callee) 序言"></a>被调函数 (Callee) 序言</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">function:</span><br><span class="line">; 1. 保存调用者栈帧</span><br><span class="line">push ebp        ; 保存旧EBP</span><br><span class="line">; 2. 建立新栈帧</span><br><span class="line">mov ebp, esp    ; EBP = 当前ESP</span><br><span class="line">; 3. 分配局部变量空间</span><br><span class="line">sub esp, 0x20   ; 分配32字节空间</span><br></pre></td></tr></table></figure>
+
+<h3 id="栈帧内存布局（32位示例）"><a href="#栈帧内存布局（32位示例）" class="headerlink" title="栈帧内存布局（32位示例）"></a>栈帧内存布局（32位示例）</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">高地址</span><br><span class="line">+-----------------+</span><br><span class="line">|    参数3        | [ebp + 16]</span><br><span class="line">+-----------------+</span><br><span class="line">|    参数2        | [ebp + 12]</span><br><span class="line">+-----------------+</span><br><span class="line">|    参数1        | [ebp + 8]</span><br><span class="line">+-----------------+</span><br><span class="line">|    返回地址      | [ebp + 4]  ← 漏洞利用关键点！</span><br><span class="line">+-----------------+</span><br><span class="line">| 保存的EBP       | &lt;-- EBP (当前栈帧基址)</span><br><span class="line">+-----------------+</span><br><span class="line">|    局部变量1     | [ebp - 4]</span><br><span class="line">+-----------------+</span><br><span class="line">|    局部变量2     | [ebp - 8]</span><br><span class="line">+-----------------+</span><br><span class="line">|     ...         | </span><br><span class="line">+-----------------+</span><br><span class="line">|    临时空间      | &lt;-- ESP (栈顶)</span><br><span class="line">低地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="函数返回过程"><a href="#函数返回过程" class="headerlink" title="函数返回过程"></a>函数返回过程</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">; 1. 返回值存入EAX（约定）</span><br><span class="line">mov eax, return_value</span><br><span class="line">; 2. 释放局部空间</span><br><span class="line">mov esp, ebp    ; ESP = EBP</span><br><span class="line">; 3. 恢复调用者栈帧</span><br><span class="line">pop ebp         ; 恢复旧EBP</span><br><span class="line">; 4. 返回到调用者</span><br><span class="line">ret             ; 弹出返回地址到EIP</span><br></pre></td></tr></table></figure>
+
+<h1 id="Tip"><a href="#Tip" class="headerlink" title="Tip"></a>Tip</h1><p>寄存器的图</p>
+<p><img src="https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/figure/register.png" alt="img"></p>
+<p><code>需要注意的是，32 位和 64 位程序有以下简单的区别:</code></p>
+<ul>
+<li><p><code>x86</code></p>
+<ul>
+<li><p><strong>函数参数</strong>在<strong>函数返回地址</strong>的上方</p>
+</li>
+<li><p><strong>栈帧布局</strong>：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">高地址</span><br><span class="line">| 参数N     | ← EBP + 4*(N+1)</span><br><span class="line">| ...      |</span><br><span class="line">| 参数2     | ← EBP + 12</span><br><span class="line">| 参数1     | ← EBP + 8</span><br><span class="line">| 返回地址   | ← EBP + 4</span><br><span class="line">| 保存的EBP  | ← EBP</span><br><span class="line">| 局部变量   | ← EBP - 4</span><br><span class="line">低地址</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><code>x64</code></p>
+<ul>
+<li><p>System V AMD64 ABI (Linux、FreeBSD、macOS 等采用) 中前六个整型或指针参数依次保存在 <strong>RDI, RSI, RDX, RCX, R8 和 R9 寄存器</strong>中，如果还有更多的参数的话才会保存在栈上。</p>
+</li>
+<li><p>内存地址不能大于 0x00007FFFFFFFFFFF，<strong>6 个字节长度</strong>，否则会抛出异常。</p>
+</li>
+<li><p><strong>栈帧布局</strong>：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">高地址</span><br><span class="line">| 额外参数N  | ← RBP + 8*(N+1)</span><br><span class="line">| ...       |</span><br><span class="line">| 额外参数1  | ← RBP + 16</span><br><span class="line">| 返回地址    | ← RBP + 8</span><br><span class="line">| 保存的RBP  | ← RBP</span><br><span class="line">| 局部变量    | ← RBP - 8</span><br><span class="line">低地址</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://rhea006.github.io">Rhea</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://rhea006.github.io/2025/07/fa6880b0859f.html">https://rhea006.github.io/2025/07/fa6880b0859f.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://rhea006.github.io" target="_blank">Rhea's Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/w5.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/07/e846fd6fd950.html" title="2-栈溢出原理"><img class="cover" src="/img/w4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">2-栈溢出原理</div></div><div class="info-2"><div class="info-item-1">介绍栈溢出指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致与其相邻的栈中的变量的值被改变。这种问题是一种特定的缓冲区溢出漏洞，类似的还有堆溢出，bss 段溢出等溢出方式。栈溢出漏洞轻则可以使程序崩溃，重则可以使攻击者控制程序执行流程。此外，我们也不难发现，发生栈溢出的基本前提是：  程序必须向栈上写入数据。 写入的数据大小没有被良好地控制。  基本示例最典型的栈溢出利用是覆盖程序的返回地址为攻击者所控制的地址，当然需要确保这个地址所在的段具有可执行权限。下面，我们举一个简单的例子： #include &lt;stdio.h&gt;#include &lt;string.h&gt;void success(void)&#123;    puts(&quot;You Hava already controlled it.&quot;);&#125;void vulnerable(void)&#123;    char s[12];    gets(s);    puts(s);    return;&#125;int main(int argc, ch...</div></div></div></a><a class="pagination-related" href="/2025/07/627686b41f6e.html" title="Canary"><img class="cover" src="/img/w3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Canary</div></div><div class="info-2"><div class="info-item-1">介绍Stack Canaries(取名自地下煤矿的金丝雀，因为它能比矿工更早地发现煤气泄漏，有预警的作用)是一种用于对抗栈溢出攻击的技术，即SSP安全机制，有时也叫作Stack cookie。Canary 的值是栈上的一个随机数，在程序启动时随机生成并保存在比函数返回地址更低的位置。由干栈溢出从低地址向高地址进行覆盖，因此攻击者要想控制函数的返回指针，就一定要先盖到Canary。程序只需要在函数返回前检查Canary是否被篡改，就可以达到保护的目的。 示例简单程序c#include&lt;stdio.h&gt;void main()&#123;    char buf[10];    scanf(&quot;%s&quot;,buf);&#125;  在 GCC 中使用 Canary可以在 GCC 中使用以下参数设置 Canary: plaintext-fstack-protector 启用保护，不过只为局部变量中含有数组的函数插入保护-fstack-protector-all 启用保护，为所有函数插入保护-fstack-protector-strong 增加对包含局部数组定义和...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A0%88%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">基本栈介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88"><span class="toc-number">2.</span> <span class="toc-text">函数调用栈</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">核心组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88%E6%8C%87%E9%92%88-SP"><span class="toc-number">2.1.1.</span> <span class="toc-text">栈指针 (SP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E5%9D%80%E6%8C%87%E9%92%88-BP"><span class="toc-number">2.1.2.</span> <span class="toc-text">基址指针 (BP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E6%8C%87%E9%92%88-IP"><span class="toc-number">2.1.3.</span> <span class="toc-text">指令指针 (IP)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%88%E5%85%B3%E9%94%AE%EF%BC%81%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">函数调用过程（关键！）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E8%80%85-Caller-%E5%87%86%E5%A4%87"><span class="toc-number">2.2.1.</span> <span class="toc-text">调用者 (Caller) 准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A2%AB%E8%B0%83%E5%87%BD%E6%95%B0-Callee-%E5%BA%8F%E8%A8%80"><span class="toc-number">2.2.2.</span> <span class="toc-text">被调函数 (Callee) 序言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88%E5%B8%A7%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%EF%BC%8832%E4%BD%8D%E7%A4%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">2.2.3.</span> <span class="toc-text">栈帧内存布局（32位示例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E8%BF%87%E7%A8%8B"><span class="toc-number">2.2.4.</span> <span class="toc-text">函数返回过程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tip"><span class="toc-number">3.</span> <span class="toc-text">Tip</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url(/img/w5.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By Rhea</span></div><div class="footer_custom_text">Hi,welocome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="search..." type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
